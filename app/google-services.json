@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "308989074080",
+    "project_id": "sensrec-7d7db",
+    "storage_bucket": "sensrec-7d7db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308989074080:android:40e4db95a366f4ce7987c5",
+        "android_client_info": {
+          "package_name": "com.tesi.sensrec"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308989074080-d58hicvorvg1pe9k1s6c0ekn5eotc66a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBg60ohk4_y1QW10XsZprivBmvKzTvJaL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308989074080-d58hicvorvg1pe9k1s6c0ekn5eotc66a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
