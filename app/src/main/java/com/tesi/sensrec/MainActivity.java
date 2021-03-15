@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         verifyStoragePermissions(this);
-        Button go = findViewById(R.id.button);
+        Button go = findViewById(R.id.playButton);
         go.setEnabled(false);
         startService();
     }
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         EditText editlabel = findViewById(R.id.editTextUsername);
         //RadioGroup rg = findViewById(R.id.radioGroup);
         User = editlabel.getText().toString();
-        if (User.equals("")) {
+        if (User.isEmpty()) {
             error.setVisibility(VISIBLE);
         } else {
             infodialog(view);
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         if (hand.getCheckedRadioButtonId() == -1) {
             // no radio buttons are checked
         } else {
-            Button go = findViewById(R.id.button);
+            Button go = findViewById(R.id.playButton);
             go.setEnabled(true);
         }
 
@@ -143,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         if (rg.getCheckedRadioButtonId() == -1) {
             // no radio buttons are checked
         } else {
-            Button go = findViewById(R.id.button);
+            Button go = findViewById(R.id.playButton);
             go.setEnabled(true);
         }
     }
