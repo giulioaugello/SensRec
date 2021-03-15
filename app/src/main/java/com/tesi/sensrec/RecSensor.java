@@ -53,7 +53,7 @@ import java.util.Locale;
 
 public class RecSensor extends AppCompatActivity implements SensorEventListener {
     private SensorManager mSensorManager;
-    private Sensor mAcc,mGyr,mMag,mGrav;
+    private Sensor mAcc, mGyr, mMag, mGrav;
     private float[]SensorVal= new float[15];
     private String filename;
 
@@ -153,7 +153,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                     }else if(numchar == testWord.length()){
                         finishDialog("game over");
                     }
-            }else{
+                }else{
                     failDialog("time's up, retry");
                 }
 
@@ -417,8 +417,8 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 pressure = 0;
                 if (Game.equals("SENTENCE")){
-                              checkString(v);
-                          }else{
+                    checkString(v);
+                }else{
                 }
                 TouchedView = "-1";
                 Log.d("TAG", TouchedView);
@@ -459,7 +459,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     };
 
-    public void finishDialog ( String s) {
+    public void finishDialog(String s) {
         Log.d("error", "mess");
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
         miaAlert.setTitle(s);
@@ -516,21 +516,25 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             mLastAccSet = true;
 
         }
+
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             System.arraycopy(event.values, 0, SensorVal, 3, event.values.length);
         }
+
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             System.arraycopy(event.values, 0, SensorVal, 6, event.values.length);
             System.arraycopy(event.values, 0, mLastMag, 0, event.values.length);
             mLastMagSet = true;
 
         }
+
         if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
             System.arraycopy(event.values, 0, SensorVal, 12, event.values.length);
             //System.arraycopy(event.values, 0, mLastMag, 0, event.values.length);
             //mLastMagSet = true;
 
         }
+
         if (mLastAccSet && mLastMagSet){
             SensorManager.getRotationMatrix(mR,null , mLastAcc, mLastMag);
             SensorManager.getOrientation(mR, mOrientation);

@@ -2,58 +2,30 @@ package com.tesi.sensrec;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.IntentService;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 
@@ -97,14 +69,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
         verifyStoragePermissions(this);
         Button go = findViewById(R.id.button);
         go.setEnabled(false);
         startService();
-
-
-
     }
 
     public void startService() {
@@ -120,22 +89,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        RadioGroup rg = findViewById(R.id.gamemode);
+        RadioGroup rg = findViewById(R.id.hand);
         rg.clearCheck();
     }
 
     public void StartRec(View view) {
 
-        TextView Error = findViewById(R.id.textView7);
-        EditText editlabel = findViewById(R.id.editText);
+        TextView error = findViewById(R.id.errorMessage);
+        EditText editlabel = findViewById(R.id.editTextUsername);
         //RadioGroup rg = findViewById(R.id.radioGroup);
         User = editlabel.getText().toString();
         if (User.equals("")) {
-            Error.setVisibility(VISIBLE);
-
+            error.setVisibility(VISIBLE);
         } else {
-
-                infodialog(view,"Instructions");
+            infodialog(view);
         }
 
 
@@ -144,17 +111,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void onRadioButtonClicked(View view) {
 
-        RadioGroup rg = findViewById(R.id.gamemode);
-        Game = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
-        if(Game.equals("LETTER")){
-            TextView info = findViewById(R.id.textView2);
-            info.setText(R.string.mode1);
-            randomWord(true);
-        }else {
-            TextView info = findViewById(R.id.textView2);
-            info.setText(R.string.mode);
-            randomWord(false);
-        }
+//        RadioGroup rg = findViewById(R.id.gamemode);
+//        Game = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
+//        if(Game.equals("LETTER")){
+//            TextView info = findViewById(R.id.descriprionSentence);
+//            info.setText(R.string.mode1);
+//            randomWord(true);
+//        }else {
+//            TextView info = findViewById(R.id.descriprionSentence);
+//            info.setText(R.string.mode);
+//            randomWord(false);
+//        }
+        randomWord();
 
         RadioGroup hand = findViewById(R.id.hand);
         if (hand.getCheckedRadioButtonId() == -1) {
@@ -171,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
     public void hand (View view) {
         RadioGroup rg = findViewById(R.id.hand);
         Hand = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
-        RadioGroup hand = findViewById(R.id.gamemode);
-        if (hand.getCheckedRadioButtonId() == -1) {
+        //RadioGroup hand = findViewById(R.id.gamemode);
+        if (rg.getCheckedRadioButtonId() == -1) {
             // no radio buttons are checked
         } else {
             Button go = findViewById(R.id.button);
@@ -181,22 +149,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void infodialog(View v, String s) {
-        final TextView Error = findViewById(R.id.textView7);
-       final RadioGroup rg = findViewById(R.id.gamemode);
+    private void infodialog(View v) {
+        //final TextView Error = findViewById(R.id.errorMessage);
+       //final RadioGroup rg = findViewById(R.id.gamemode);
 
         Log.d("error", "mess");
-        AlertDialog.Builder miaAlert = new AlertDialog.Builder(v.getContext());
-        miaAlert.setTitle(s);
-        if (Game.equals("LETTER")){
-            miaAlert.setMessage(R.string.mode1);
-        } else {
-            miaAlert.setMessage(R.string.mode);
-        }
+        AlertDialog.Builder infoAlert = new AlertDialog.Builder(v.getContext());
+        infoAlert.setTitle("Instructions");
+//        if (Game.equals("LETTER")){
+//            infoAlert.setMessage(R.string.mode1);
+//        } else {
+//            infoAlert.setMessage(R.string.mode);
+//        }
+        infoAlert.setMessage("Press OK to start playing or CANCEL to go back!");
 
 
-        miaAlert.setCancelable(false);
-        miaAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        infoAlert.setCancelable(false);
+        infoAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Intent data = new Intent("com.tesi.sensrec");
                 data.putExtra("User", User);
@@ -208,50 +177,38 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        AlertDialog alert = miaAlert.create();
+
+        infoAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+
+        AlertDialog alert = infoAlert.create();
         alert.show();
     }
 
-    private String randomWord(boolean gameMode) {
-        if (!gameMode) {
-            try {
+    private String randomWord() {
 
-                br = new BufferedReader(new InputStreamReader(getAssets().open("TestWords.txt")));
-                cont = 0;
-                int ran = new Random().nextInt(20) /*+ 1*/;
+        try {
+
+            br = new BufferedReader(new InputStreamReader(getAssets().open("TestWords.txt")));
+            cont = 0;
+            int ran = new Random().nextInt(20) /*+ 1*/;
+            line = br.readLine();
+            while (line != null && cont != ran) {
                 line = br.readLine();
-                while (line != null && cont != ran) {
-
-                    line = br.readLine();
-                    cont++;
-                }
-                Log.d(TAG, "n" + cont);
-                Log.d(TAG, "w: " + line);
-
-            } catch (Exception e) {
-                Log.e(TAG, "onCreate: " + e.getMessage());
+                cont++;
             }
-            return line;
-        } else {
-            try {
+            Log.d(TAG, "n" + cont);
+            Log.d(TAG, "w: " + line);
 
-                br = new BufferedReader(new InputStreamReader(getAssets().open("testChar.txt")));
-                cont = 0;
-                int ran = new Random().nextInt(30) /*+ 1*/;
-                line = br.readLine();
-                while (line != null && cont != ran) {
-
-                    line = br.readLine();
-                    cont++;
-                }
-                Log.d(TAG, "n" + cont);
-                Log.d(TAG, "w: " + line);
-
-            } catch (Exception e) {
-                Log.e(TAG, "onCreate: " + e.getMessage());
-            }
-            return line;
+        } catch (Exception e) {
+            Log.e(TAG, "onCreate: " + e.getMessage());
         }
+        return line;
     }
 
 

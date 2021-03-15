@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">SensRec</string>
-    <string name="placeholder">Insert User</string>
+    <string name="placeholder">Insert Username</string>
+    <string name="right">RIGHT</string>
+    <string name="left">LEFT</string>
+    <string name="instructions">Instructions</string>
+    <string name="play">Play</string>
     <string name="word">Insert word</string>
     <string name="LogUser">Insert Username</string>
     <string name="GO">GO</string>
-    <string name="Error">Please  select a game mode  and insert Username first</string>
+    <string name="Error">Please insert Username first</string>
     <string name="Error2">Please use only lowercase</string>
     <string name="Error3">you typed the wrong key</string>
     <string name="Error4">Remember to hold the key until the word background turns green </string>
