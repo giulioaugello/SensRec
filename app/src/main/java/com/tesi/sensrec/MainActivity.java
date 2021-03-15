@@ -41,13 +41,10 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private String Game;
-    private String checked;
     private String line;
     private BufferedReader br;
-    JSONArray tests = new JSONArray();
     private String User;
     private String Hand;
-    private ArrayList<String> List = new ArrayList<>();
     private int cont = 0;
 
    // private int  cont = 0;
@@ -112,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void onRadioButtonClicked(View view) {
-
+//    public void onRadioButtonClicked(View view) {
+//
 //        RadioGroup rg = findViewById(R.id.gamemode);
 //        Game = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
 //        if(Game.equals("LETTER")){
@@ -125,21 +122,22 @@ public class MainActivity extends AppCompatActivity {
 //            info.setText(R.string.mode);
 //            randomWord(false);
 //        }
-        randomWord();
-
-        RadioGroup hand = findViewById(R.id.hand);
-        if (hand.getCheckedRadioButtonId() == -1) {
-            // no radio buttons are checked
-        } else {
-            Button go = findViewById(R.id.playButton);
-            go.setEnabled(true);
-        }
-
-    }
+//
+//        RadioGroup hand = findViewById(R.id.hand);
+//        if (hand.getCheckedRadioButtonId() == -1) {
+//            // no radio buttons are checked
+//        } else {
+//            Button go = findViewById(R.id.playButton);
+//            go.setEnabled(true);
+//        }
+//
+//    }
 
 
 
     public void hand (View view) {
+        randomWord();
+
         RadioGroup rg = findViewById(R.id.hand);
         Hand = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
         //RadioGroup hand = findViewById(R.id.gamemode);
@@ -172,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 Intent data = new Intent("com.tesi.sensrec");
                 data.putExtra("User", User);
-                data.putExtra("Game",Game);
-                data.putExtra("words",line);
-                data.putExtra("hand",Hand);
+                //data.putExtra("Game",Game);
+                data.putExtra("words", line);
+                data.putExtra("hand", Hand);
                 stopService();
                 startActivity(data);
             }
