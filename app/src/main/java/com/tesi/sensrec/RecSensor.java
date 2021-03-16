@@ -259,48 +259,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 //printWriter.close();
 
             }
-//            if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
-//                File path = Environment.getExternalStorageDirectory();
-//                long time = System.currentTimeMillis();
-////            filename= User +  "-"+Hand+"-"+time+"-"+Game+"-"+testWord+".csv";
-//                filename= User +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
-//                Log.d(TAG, "onCreate: " + filename);
-//                check = new File(path + "/" + filename);
-//                //FilePath = path+"/"+filename;
-//                //check if file not exist then append header
-//                Log.i("api30api30", "IN CREATE: " + check + check.exists());
-//                boolean v = check.exists();
-//                if (!v) {
-//                    Log.i("api30api30", "IN CREATE: " + printWriter);
-//                    //check.createNewFile();
-//
-//                    printWriter = new PrintWriter(new FileOutputStream(check, true));
-//                    printWriter.print("Timestamp" + "," + "Ax" + "," + "Ay" + "," + "Az" + "," + "Gx" + "," + "Gy" + "," + "Gz" + "," + "Mx" +
-//                            "," + "My" + "," + "Mz" + "," + "Ox" + "," + "Oy" + "," + "Oz" +  "," + "Grx" + "," + "Gry" + "," + "Grz"+"," +"View"+","+ "Pressure" + "," + User +"," + Hand +","+ System.currentTimeMillis() + "\n");
-//                    //printWriter.close();
-//
-//                }
-//            } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
-//                File path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-//                Log.i("api30api30", "IN CREATE PATH: " + path);
-//                long time = System.currentTimeMillis();
-//                filename= User +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
-//                Log.d(TAG, "onCreate: " + filename);
-//                check = new File(path + "/" + filename);
-//                //FilePath = path+"/"+filename;
-//                //check if file not exist then append header
-//                Log.i("api30api30", "IN CREATE: " + check + check.exists());
-//                boolean v = check.exists();
-//                if (!v) {
-//                    //check.createNewFile();
-//
-//                    printWriter = new PrintWriter(new FileOutputStream(check, true));
-//                    printWriter.print("Timestamp" + "," + "Ax" + "," + "Ay" + "," + "Az" + "," + "Gx" + "," + "Gy" + "," + "Gz" + "," + "Mx" +
-//                            "," + "My" + "," + "Mz" + "," + "Ox" + "," + "Oy" + "," + "Oz" +  "," + "Grx" + "," + "Gry" + "," + "Grz"+"," +"View"+","+ "Pressure" + "," + User +"," + Hand +","+ System.currentTimeMillis() + "\n");
-//                    //printWriter.close();
-//
-//                }
-//            }
+
 //            File path = Environment.getExternalStorageDirectory();
 //            long time = System.currentTimeMillis();
 ////            filename= User +  "-"+Hand+"-"+time+"-"+Game+"-"+testWord+".csv";
@@ -434,7 +393,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         printWriter.close();
         for(final File elem : Files){
             Uri file = Uri.fromFile(elem);
-            StorageReference riversRef = storageRef.child("rawCsv/"+file.getLastPathSegment());
+            StorageReference riversRef = storageRef.child("rawCsv/" + file.getLastPathSegment());
             riversRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -444,7 +403,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(RecSensor.this, "Failed "+e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(RecSensor.this, "Failed " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
 

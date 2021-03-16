@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        RadioGroup rg = findViewById(R.id.hand);
-        rg.clearCheck();
+//        RadioGroup rg = findViewById(R.id.hand);
+//        rg.clearCheck();
     }
 
     public void StartRec(View view) {
