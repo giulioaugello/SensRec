@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 //        } else {
 //            infoAlert.setMessage(R.string.mode);
 //        }
-        infoAlert.setMessage("Press OK to start playing or CANCEL to go back!");
+        infoAlert.setMessage(R.string.alertDialogMessage);
 
 
         infoAlert.setCancelable(false);

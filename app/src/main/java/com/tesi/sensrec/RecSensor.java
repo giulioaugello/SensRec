@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Locale;
 
@@ -119,7 +120,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     private void setData() {
         User = getIntent().getStringExtra("User");
-        Game = getIntent().getStringExtra("Game");
+        //Game = getIntent().getStringExtra("Game");
         testWord = getIntent().getStringExtra("words");
         Hand = getIntent().getStringExtra("hand");
 
@@ -144,18 +145,19 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 //textView.setBackgroundColor(Color.parseColor("#6AFB92"));
 
                 end = true;
-                if (Game.equals("LETTER")){
-                    countDown = false;
-                    numchar++;
-                    if (numchar < testWord.length()) {
-                        editText.setText(String.valueOf(testWord.charAt(numchar)));
-                        updateCountDownText();
-                    }else if(numchar == testWord.length()){
-                        finishDialog("game over");
-                    }
-                }else{
-                    failDialog("time's up, retry");
-                }
+//                if (Game.equals("LETTER")){
+//                    countDown = false;
+//                    numchar++;
+//                    if (numchar < testWord.length()) {
+//                        editText.setText(String.valueOf(testWord.charAt(numchar)));
+//                        updateCountDownText();
+//                    }else if(numchar == testWord.length()){
+//                        finishDialog("game over");
+//                    }
+//                }else{
+//                    failDialog("time's up, retry");
+//                }
+                failDialog("Time's up, retry");
 
             }
         };
@@ -164,24 +166,30 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     private void setView() {
         setContentView(R.layout.test);
-        if(Game.equals("SENTENCE")) {
-            textView =findViewById(R.id.editText2);
-            editText = findViewById(R.id.editText);
-            textView.setVisibility(View.VISIBLE);
-            editText.setVisibility(View.VISIBLE);
-        }else{
-            textView2 = findViewById(R.id.editText2);
-            textView =findViewById(R.id.editText4);
-            editText = findViewById(R.id.editText3);
-            textView.setVisibility(View.VISIBLE);
-            editText.setVisibility(View.VISIBLE);
-            textView2.setVisibility(View.VISIBLE);
-            textView2.setFocusable(false);
-            textView2.setCursorVisible(false);
-            numchar = 0;
-            char first = testWord.charAt(numchar);
-            editText.setText(String.valueOf(first));
-        }
+//        if(Game.equals("SENTENCE")) {
+//            textView =findViewById(R.id.editText2);
+//            editText = findViewById(R.id.editText);
+//            textView.setVisibility(View.VISIBLE);
+//            editText.setVisibility(View.VISIBLE);
+//        }else{
+//            textView2 = findViewById(R.id.editText2);
+//            textView =findViewById(R.id.editText4);
+//            editText = findViewById(R.id.editText3);
+//            textView.setVisibility(View.VISIBLE);
+//            editText.setVisibility(View.VISIBLE);
+//            textView2.setVisibility(View.VISIBLE);
+//            textView2.setFocusable(false);
+//            textView2.setCursorVisible(false);
+//            numchar = 0;
+//            char first = testWord.charAt(numchar);
+//            editText.setText(String.valueOf(first));
+//        }
+
+        textView = findViewById(R.id.toWrite);
+        editText = findViewById(R.id.keyPressed);
+        textView.setVisibility(View.VISIBLE);
+        editText.setVisibility(View.VISIBLE);
+
         editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
         //editText.setTextIsSelectable(true);
         editText.setCursorVisible(false);
@@ -189,6 +197,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         textView.setText(testWord);
         textView.setFocusable(false);
         textView.setCursorVisible(false);
+
         ArrayList<View> allButtons;
         allButtons = (findViewById(R.id.keyboard)).getTouchables();
         for(View tmp : allButtons){
@@ -199,47 +208,122 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             }
 
         }
-        if (Game.equals("SENTENCE")){
-            if (testWord.length()<30){
-                timer = 30000;
-            }else if (testWord.length()<40){
-                timer = 40000;
-            }else if (testWord.length()>=40){
-                timer = 50000;
-            }
-            createCountDown(timer);
-        }else {
-            timer = 2100;
-            tmpTimer = timer;
+//        if (Game.equals("SENTENCE")){
+//            if (testWord.length()<30){
+//                timer = 30000;
+//            }else if (testWord.length()<40){
+//                timer = 40000;
+//            }else if (testWord.length()>=40){
+//                timer = 50000;
+//            }
+//            createCountDown(timer);
+//        }else {
+//            timer = 2100;
+//            tmpTimer = timer;
+//        }
+
+        if (testWord.length() < 30){
+            timer = 30000;
+        }else if (testWord.length() < 40){
+            timer = 40000;
+        }else if (testWord.length() >= 40){
+            timer = 50000;
         }
+        createCountDown(timer);
 
     }
 
-
-
-
     private void createNewFileCSV() {
         try {
-            File path = Environment.getExternalStorageDirectory();
+            File path = null;
+            if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
+                path = Environment.getExternalStorageDirectory();
+            } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
+                path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+            }
+            Log.i("api30api30", "IN CREATE PATH: " + path);
             long time = System.currentTimeMillis();
-            filename= User +  "-"+Hand+"-"+time+"-"+Game+"-"+testWord+".csv";
+            filename= User +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
             Log.d(TAG, "onCreate: " + filename);
-            check = new File(path +"/"+ filename);
+            check = new File(path + "/" + filename);
             //FilePath = path+"/"+filename;
-            //check i f file not exsist then append header
+            //check if file not exist then append header
+            Log.i("api30api30", "IN CREATE: " + check + check.exists());
             boolean v = check.exists();
             if (!v) {
                 //check.createNewFile();
-                 printWriter = new PrintWriter(new FileOutputStream(check, true));
+
+                printWriter = new PrintWriter(new FileOutputStream(check, true));
                 printWriter.print("Timestamp" + "," + "Ax" + "," + "Ay" + "," + "Az" + "," + "Gx" + "," + "Gy" + "," + "Gz" + "," + "Mx" +
                         "," + "My" + "," + "Mz" + "," + "Ox" + "," + "Oy" + "," + "Oz" +  "," + "Grx" + "," + "Gry" + "," + "Grz"+"," +"View"+","+ "Pressure" + "," + User +"," + Hand +","+ System.currentTimeMillis() + "\n");
                 //printWriter.close();
 
             }
+//            if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
+//                File path = Environment.getExternalStorageDirectory();
+//                long time = System.currentTimeMillis();
+////            filename= User +  "-"+Hand+"-"+time+"-"+Game+"-"+testWord+".csv";
+//                filename= User +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
+//                Log.d(TAG, "onCreate: " + filename);
+//                check = new File(path + "/" + filename);
+//                //FilePath = path+"/"+filename;
+//                //check if file not exist then append header
+//                Log.i("api30api30", "IN CREATE: " + check + check.exists());
+//                boolean v = check.exists();
+//                if (!v) {
+//                    Log.i("api30api30", "IN CREATE: " + printWriter);
+//                    //check.createNewFile();
+//
+//                    printWriter = new PrintWriter(new FileOutputStream(check, true));
+//                    printWriter.print("Timestamp" + "," + "Ax" + "," + "Ay" + "," + "Az" + "," + "Gx" + "," + "Gy" + "," + "Gz" + "," + "Mx" +
+//                            "," + "My" + "," + "Mz" + "," + "Ox" + "," + "Oy" + "," + "Oz" +  "," + "Grx" + "," + "Gry" + "," + "Grz"+"," +"View"+","+ "Pressure" + "," + User +"," + Hand +","+ System.currentTimeMillis() + "\n");
+//                    //printWriter.close();
+//
+//                }
+//            } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
+//                File path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+//                Log.i("api30api30", "IN CREATE PATH: " + path);
+//                long time = System.currentTimeMillis();
+//                filename= User +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
+//                Log.d(TAG, "onCreate: " + filename);
+//                check = new File(path + "/" + filename);
+//                //FilePath = path+"/"+filename;
+//                //check if file not exist then append header
+//                Log.i("api30api30", "IN CREATE: " + check + check.exists());
+//                boolean v = check.exists();
+//                if (!v) {
+//                    //check.createNewFile();
+//
+//                    printWriter = new PrintWriter(new FileOutputStream(check, true));
+//                    printWriter.print("Timestamp" + "," + "Ax" + "," + "Ay" + "," + "Az" + "," + "Gx" + "," + "Gy" + "," + "Gz" + "," + "Mx" +
+//                            "," + "My" + "," + "Mz" + "," + "Ox" + "," + "Oy" + "," + "Oz" +  "," + "Grx" + "," + "Gry" + "," + "Grz"+"," +"View"+","+ "Pressure" + "," + User +"," + Hand +","+ System.currentTimeMillis() + "\n");
+//                    //printWriter.close();
+//
+//                }
+//            }
+//            File path = Environment.getExternalStorageDirectory();
+//            long time = System.currentTimeMillis();
+////            filename= User +  "-"+Hand+"-"+time+"-"+Game+"-"+testWord+".csv";
+//            filename= User +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
+//            Log.d(TAG, "onCreate: " + filename);
+//            check = new File(path + "/" + filename);
+//            //FilePath = path+"/"+filename;
+//            //check if file not exist then append header
+//            Log.i("api30api30", "IN CREATE: " + check + check.exists());
+//            boolean v = check.exists();
+//            if (!v) {
+//                Log.i("api30api30", "IN CREATE: " + printWriter);
+//                //check.createNewFile();
+//
+//                printWriter = new PrintWriter(new FileOutputStream(check, true));
+//                printWriter.print("Timestamp" + "," + "Ax" + "," + "Ay" + "," + "Az" + "," + "Gx" + "," + "Gy" + "," + "Gz" + "," + "Mx" +
+//                        "," + "My" + "," + "Mz" + "," + "Ox" + "," + "Oy" + "," + "Oz" +  "," + "Grx" + "," + "Gry" + "," + "Grz"+"," +"View"+","+ "Pressure" + "," + User +"," + Hand +","+ System.currentTimeMillis() + "\n");
+//                //printWriter.close();
+//
+//            }
 
         }catch (IOException e){
-            e.printStackTrace();
-
+            Log.i("api30api30", "CATCH: " + e.getMessage());
         }
     }
 
@@ -252,34 +336,45 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     }
 
 
-    public void resumeDialog( String s, String s2) {
+    public void resumeDialog(String title, String message) {
         Log.d("error", "mess");
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
-        miaAlert.setTitle(s);
-        miaAlert.setMessage(s2);
+        miaAlert.setTitle(title);
+        miaAlert.setMessage(message);
 
         miaAlert.setCancelable(false);
         miaAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 pause = false;
-                if (Game.equals("LETTER")){
-                    numchar = 0;
-                    timer = 2100;
-                    tmpTimer = timer;
-                    editText = findViewById(R.id.editText3);
-                    char first = testWord.charAt(numchar);
-                    editText.setText(String.valueOf(first));
-                }else{
-                    if (testWord.length()<30){
-                        timer = 30000;
-                    }else if (testWord.length()<40){
-                        timer = 40000;
-                    }else if (testWord.length()>=40){
-                        timer = 50000;
-                    }
+//                if (Game.equals("LETTER")){
+//                    numchar = 0;
+//                    timer = 2100;
+//                    tmpTimer = timer;
+//                    editText = findViewById(R.id.editText3);
+//                    char first = testWord.charAt(numchar);
+//                    editText.setText(String.valueOf(first));
+//                }else{
+//                    if (testWord.length()<30){
+//                        timer = 30000;
+//                    }else if (testWord.length()<40){
+//                        timer = 40000;
+//                    }else if (testWord.length()>=40){
+//                        timer = 50000;
+//                    }
+//
+//                    createCountDown(timer);
+//                }
 
-                    createCountDown(timer);
+                if (testWord.length()<30){
+                    timer = 30000;
+                }else if (testWord.length()<40){
+                    timer = 40000;
+                }else if (testWord.length()>=40){
+                    timer = 50000;
                 }
+
+                createCountDown(timer);
+
                 check.delete();
                 createNewFileCSV();
             }
@@ -293,9 +388,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     protected void onResume (){
         super.onResume();
         onSensoResume();
-        if (pause)
-            resumeDialog("THE GAME HAS BEEN INTERRUPTED","please press ok to restart it");
-
+        if (pause) resumeDialog("THE GAME HAS BEEN INTERRUPTED","please press ok to restart it");
 
     }
 
@@ -315,14 +408,19 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         mSensorManager.unregisterListener(this);
         countDown = false;
         printWriter.close();
-        if (Game.equals("LETTER")) {
-            TextView cDTextView = findViewById(R.id.text_view_countdown);
-            cDTextView.setVisibility(View.INVISIBLE);
-            textView2.setText("");
-        }else{
-            TextView cDTextView = findViewById(R.id.text_view_countdown);
-            cDTextView.setVisibility(View.INVISIBLE);
-        }
+        Log.i("api30api30", "IN ONPAUSE: " + printWriter);
+//        if (Game.equals("LETTER")) {
+//            TextView cDTextView = findViewById(R.id.text_view_countdown);
+//            cDTextView.setVisibility(View.INVISIBLE);
+//            textView2.setText("");
+//        }else{
+//            TextView cDTextView = findViewById(R.id.text_view_countdown);
+//            cDTextView.setVisibility(View.INVISIBLE);
+//        }
+
+        TextView cDTextView = findViewById(R.id.text_view_countdown);
+        cDTextView.setVisibility(View.INVISIBLE);
+
         if(ct!= null){
             ct.cancel();
         }
@@ -330,13 +428,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     }
 
-
-
-
-
-
     private void closeRoutine() {
         mSensorManager.unregisterListener(this);
+        Log.i("api30api30", "IN CLOSER: " + printWriter);
         printWriter.close();
         for(final File elem : Files){
             Uri file = Uri.fromFile(elem);
@@ -368,6 +462,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         miaAlert.setCancelable(false);
         miaAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                Log.i("api30api30", "IN FAILD: " + printWriter);
                 printWriter.close();
                 countDown = false;
                 check.delete();
@@ -378,9 +473,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         alert.show();
     }
 
-
-
-
     private void updateCountDownText() {
         int seconds = (int) (timer / 1000) % 60;
         int cent = (int) (timer / 100) % 10;
@@ -388,15 +480,15 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         TextView time = findViewById(R.id.text_view_countdown);
         time.setText(timeLeftFormatted);
         Log.d("Timer",String.valueOf(timer));
-        if(Game.equals("LETTER")) {
-            if (end) {
-                ct.cancel();
-                tmpTimer = tmpTimer - 200;
-                timer = tmpTimer;
-                createCountDown(timer);
-                ct.start();
-            }
-        }
+//        if(Game.equals("LETTER")) {
+//            if (end) {
+//                ct.cancel();
+//                tmpTimer = tmpTimer - 200;
+//                timer = tmpTimer;
+//                createCountDown(timer);
+//                ct.start();
+//            }
+//        }
     }
 
 
@@ -409,48 +501,53 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 pressure = event.getPressure();
-                if(Game.equals("SENTENCE")){
-                    SentenceMode(v);
-                }else{
-                    letterMode(v);
-                }
+//                if(Game.equals("SENTENCE")){
+//                    SentenceMode(v);
+//                }else{
+//                    letterMode(v);
+//                }
+                SentenceMode(v);
+
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 pressure = 0;
-                if (Game.equals("SENTENCE")){
-                    checkString(v);
-                }else{
-                }
+//                if (Game.equals("SENTENCE")){
+//                    checkString(v);
+//                }else{
+//                }
+
+                checkString(v);
+
                 TouchedView = "-1";
                 Log.d("TAG", TouchedView);
             }
             return true;
         }
 
-        private void letterMode(View v) {
-            TouchedView = v.getTag().toString();
-            textView2.append(TouchedView);
-            if (!textView.getText().toString().startsWith(textView2.getText().toString())){
-                failDialog("you typed the wrong key, retry");
-            }
-            if (numchar==0) {
-                createCountDown(timer);
-                ct.start();
-                countDown = true;
-                TextView cDTextView = findViewById(R.id.text_view_countdown);
-                cDTextView.setVisibility(View.VISIBLE);
-                updateCountDownText();
-            }
-        }
+//        private void letterMode(View v) {
+//            TouchedView = v.getTag().toString();
+//            textView2.append(TouchedView);
+//            if (!textView.getText().toString().startsWith(textView2.getText().toString())){
+//                failDialog("you typed the wrong key, retry");
+//            }
+//            if (numchar==0) {
+//                createCountDown(timer);
+//                ct.start();
+//                countDown = true;
+//                TextView cDTextView = findViewById(R.id.text_view_countdown);
+//                cDTextView.setVisibility(View.VISIBLE);
+//                updateCountDownText();
+//            }
+//        }
 
         private void checkString(View v) {
             if (!textView.getText().toString().startsWith(editText.getText().toString())) {
-                TextView error = findViewById(R.id.textView3);
+                TextView error = findViewById(R.id.textViewWrongKey);
                 error.setVisibility(View.VISIBLE);
                 editText.setText(undo);
 
             } else if (textView.getText().toString().equals(editText.getText().toString())) {
                     ct.cancel();
-                    finishDialog("game over");
+                    finishDialog("Game Over");
             }else if (textView.getText().toString().startsWith(editText.getText().toString())){
 
             }
@@ -478,7 +575,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
 
     private void SentenceMode(View v) {
-        TextView error = findViewById(R.id.textView3);
+        TextView error = findViewById(R.id.textViewWrongKey);
         error.setVisibility(View.INVISIBLE);
         TouchedView = v.getTag().toString();
         undo = editText.getText().toString();
@@ -542,11 +639,11 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
         }
 
+        //Log.i("api30api30", Arrays.toString(SensorVal) + ", touchedView: " + TouchedView + ", printW: " + printWriter + ", press: " + pressure);
 
         //Call CSV.Write to Insert the sensor's values, the tag of the TouchedView = v.getTag().toString(); element clicked(-1 if nothing clicked) and the path of the file created(check)
         //append Timestamp
-        CSV.Write(SensorVal, TouchedView, printWriter,pressure);
-
+        CSV.Write(SensorVal, TouchedView, printWriter, pressure);
 
     }
 }

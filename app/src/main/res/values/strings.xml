@@ -5,6 +5,8 @@
     <string name="left">LEFT</string>
     <string name="instructions">Instructions</string>
     <string name="play">Play</string>
+    <string name="alertDialogMessage">Press OK to start playing or CANCEL to go back!</string>
+    <string name="wrongKey">You type the wrong key, take your time</string>
     <string name="word">Insert word</string>
     <string name="LogUser">Insert Username</string>
     <string name="GO">GO</string>

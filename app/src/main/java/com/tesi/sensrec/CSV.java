@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 
 public class CSV {
@@ -34,6 +35,8 @@ public class CSV {
         var.append("\n");
         //printWriter.append(TouchedView+"\n");
         //Log.d( "var:",var.toString());
+        //Log.i("api30api30", "IN WRITE: " + Arrays.toString(args) + ", touchedView: " + view + ", printW: " + printWriter + ", press: " + pressure);
+        //Log.i("api30api30", "IN WRITE: " + var);
         printWriter.print(var);
 
 
@@ -45,7 +48,6 @@ public class CSV {
         var.append(diffe);
         var.append("\n");
         printWriter.print(var);
-
 
     }
 }

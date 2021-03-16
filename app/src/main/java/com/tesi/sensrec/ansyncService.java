@@ -47,9 +47,9 @@ public class ansyncService extends Service {
         if (directoryListing != null) {
             for (final File child : directoryListing) {
                 if (child.getName().contains(".csv")){
-                    Log.d(TAG, "onStartCommand: file:"+child);
+                    Log.d(TAG, "onStartCommand: file:" + child);
                     Uri file = Uri.fromFile(child);
-                    StorageReference riversRef = storageRef.child("rawCsv/"+file.getLastPathSegment());
+                    StorageReference riversRef = storageRef.child("rawCsv/" + file.getLastPathSegment());
                     riversRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
