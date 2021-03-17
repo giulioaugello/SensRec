@@ -108,7 +108,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     private void setData() {
         User = getIntent().getStringExtra("User");
-        //Game = getIntent().getStringExtra("Game");
         testWord = getIntent().getStringExtra("words");
         Hand = getIntent().getStringExtra("hand");
 
@@ -125,26 +124,16 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             public void onTick(long left) {
                 lefTime = left;
                 timer = left;
+
                 updateCountDownText();
+
             }
 
             @Override
             public void onFinish() { //se scade il tempo
-                //textView.setBackgroundColor(Color.parseColor("#6AFB92"));
 
                 end = true;
-//                if (Game.equals("LETTER")){
-//                    countDown = false;
-//                    numchar++;
-//                    if (numchar < testWord.length()) {
-//                        editText.setText(String.valueOf(testWord.charAt(numchar)));
-//                        updateCountDownText();
-//                    }else if(numchar == testWord.length()){
-//                        finishDialog("game over");
-//                    }
-//                }else{
-//                    failDialog("time's up, retry");
-//                }
+
                 failDialog("Time's up, retry");
 
             }
@@ -154,24 +143,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     private void setView() {
         setContentView(R.layout.test);
-//        if(Game.equals("SENTENCE")) {
-//            textView =findViewById(R.id.editText2);
-//            editText = findViewById(R.id.editText);
-//            textView.setVisibility(View.VISIBLE);
-//            editText.setVisibility(View.VISIBLE);
-//        }else{
-//            textView2 = findViewById(R.id.editText2);
-//            textView =findViewById(R.id.editText4);
-//            editText = findViewById(R.id.editText3);
-//            textView.setVisibility(View.VISIBLE);
-//            editText.setVisibility(View.VISIBLE);
-//            textView2.setVisibility(View.VISIBLE);
-//            textView2.setFocusable(false);
-//            textView2.setCursorVisible(false);
-//            numchar = 0;
-//            char first = testWord.charAt(numchar);
-//            editText.setText(String.valueOf(first));
-//        }
 
         textToWrite = findViewById(R.id.toWrite);
         textKeyPressed = findViewById(R.id.keyPressed);
@@ -179,9 +150,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         textKeyPressed.setVisibility(View.VISIBLE);
 
         textKeyPressed.setRawInputType(InputType.TYPE_CLASS_TEXT);
-        //editText.setTextIsSelectable(true);
         textKeyPressed.setCursorVisible(false);
         textKeyPressed.setFocusable(false);
+
         textToWrite.setText(testWord);
         textToWrite.setFocusable(false);
         textToWrite.setCursorVisible(false);
@@ -196,19 +167,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             }
 
         }
-//        if (Game.equals("SENTENCE")){
-//            if (testWord.length()<30){
-//                timer = 30000;
-//            }else if (testWord.length()<40){
-//                timer = 40000;
-//            }else if (testWord.length()>=40){
-//                timer = 50000;
-//            }
-//            createCountDown(timer);
-//        }else {
-//            timer = 2100;
-//            tmpTimer = timer;
-//        }
 
         if (testWord.length() < 30){
             timer = 30000;
@@ -237,12 +195,10 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             //check if file not exist then append header
             boolean v = check.exists();
             if (!v) {
-                //check.createNewFile();
 
                 printWriter = new PrintWriter(new FileOutputStream(check, true));
                 printWriter.print("Timestamp" + "," + "Ax" + "," + "Ay" + "," + "Az" + "," + "Gx" + "," + "Gy" + "," + "Gz" + "," + "Mx" +
                         "," + "My" + "," + "Mz" + "," + "Ox" + "," + "Oy" + "," + "Oz" +  "," + "Grx" + "," + "Gry" + "," + "Grz"+"," +"View"+","+ "Pressure" + "," + User +"," + Hand +","+ System.currentTimeMillis() + "\n");
-                //printWriter.close();
 
             }
 
@@ -270,24 +226,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         miaAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 pause = false;
-//                if (Game.equals("LETTER")){
-//                    numchar = 0;
-//                    timer = 2100;
-//                    tmpTimer = timer;
-//                    editText = findViewById(R.id.editText3);
-//                    char first = testWord.charAt(numchar);
-//                    editText.setText(String.valueOf(first));
-//                }else{
-//                    if (testWord.length()<30){
-//                        timer = 30000;
-//                    }else if (testWord.length()<40){
-//                        timer = 40000;
-//                    }else if (testWord.length()>=40){
-//                        timer = 50000;
-//                    }
-//
-//                    createCountDown(timer);
-//                }
 
                 if (testWord.length() < 30){
                     timer = 30000;
@@ -332,14 +270,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         mSensorManager.unregisterListener(this);
         countDown = false;
         printWriter.close();
-//        if (Game.equals("LETTER")) {
-//            TextView cDTextView = findViewById(R.id.text_view_countdown);
-//            cDTextView.setVisibility(View.INVISIBLE);
-//            textView2.setText("");
-//        }else{
-//            TextView cDTextView = findViewById(R.id.text_view_countdown);
-//            cDTextView.setVisibility(View.INVISIBLE);
-//        }
 
         TextView cDTextView = findViewById(R.id.text_view_countdown);
         cDTextView.setVisibility(View.INVISIBLE);
@@ -399,18 +329,11 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         int seconds = (int) (timer / 1000) % 60;
         int cent = (int) (timer / 100) % 10;
         String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", seconds, cent);
+
         TextView time = findViewById(R.id.text_view_countdown);
         time.setText(timeLeftFormatted);
+
         Log.d("Timer",String.valueOf(timer));
-//        if(Game.equals("LETTER")) {
-//            if (end) {
-//                ct.cancel();
-//                tmpTimer = tmpTimer - 200;
-//                timer = tmpTimer;
-//                createCountDown(timer);
-//                ct.start();
-//            }
-//        }
     }
 
 
@@ -423,43 +346,19 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 pressure = event.getPressure();
-//                if(Game.equals("SENTENCE")){
-//                    SentenceMode(v);
-//                }else{
-//                    letterMode(v);
-//                }
+
                 SentenceMode(v);
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 pressure = 0;
-//                if (Game.equals("SENTENCE")){
-//                    checkString(v);
-//                }else{
-//                }
 
                 checkString(v);
 
-                TouchedView = "-1";
+                TouchedView = "-1"; //setto a -1 quando alzo il dito
                 Log.d("TAG", TouchedView);
             }
             return true;
         }
-
-//        private void letterMode(View v) {
-//            TouchedView = v.getTag().toString();
-//            textView2.append(TouchedView);
-//            if (!textView.getText().toString().startsWith(textView2.getText().toString())){
-//                failDialog("you typed the wrong key, retry");
-//            }
-//            if (numchar==0) {
-//                createCountDown(timer);
-//                ct.start();
-//                countDown = true;
-//                TextView cDTextView = findViewById(R.id.text_view_countdown);
-//                cDTextView.setVisibility(View.VISIBLE);
-//                updateCountDownText();
-//            }
-//        }
 
         private void checkString(View v) {
             if (!textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())) {
@@ -474,7 +373,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             }
         }
-
 
     };
 
@@ -499,16 +397,17 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     private void SentenceMode(View v) {
         TextView error = findViewById(R.id.textViewWrongKey);
         error.setVisibility(View.INVISIBLE);
+
         TouchedView = v.getTag().toString(); //quando premo imposta touchedView con l'ultimo tasto premuto
         undo = textKeyPressed.getText().toString(); //è la frase scritta prima di premere un nuovo tasto
         textKeyPressed.append(TouchedView);
+
         if(!countDown) {
             countDownTimer.start();
             countDown = true;
             TextView cDTextView = findViewById(R.id.text_view_countdown);
             cDTextView.setVisibility(View.VISIBLE);
             updateCountDownText();
-            //textView.setBackgroundColor(Color.parseColor("#ff7b5a"));
         }
     }
 

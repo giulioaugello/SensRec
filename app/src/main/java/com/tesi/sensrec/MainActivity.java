@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    private String Game;
     private String line;
     private BufferedReader br;
     private String User;
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView error = findViewById(R.id.errorMessage);
         EditText editlabel = findViewById(R.id.editTextUsername);
-        //RadioGroup rg = findViewById(R.id.radioGroup);
+
         User = editlabel.getText().toString();
         if (User.isEmpty()) {
             error.setVisibility(VISIBLE);
@@ -108,40 +107,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-//    public void onRadioButtonClicked(View view) {
-//
-//        RadioGroup rg = findViewById(R.id.gamemode);
-//        Game = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
-//        if(Game.equals("LETTER")){
-//            TextView info = findViewById(R.id.descriprionSentence);
-//            info.setText(R.string.mode1);
-//            randomWord(true);
-//        }else {
-//            TextView info = findViewById(R.id.descriprionSentence);
-//            info.setText(R.string.mode);
-//            randomWord(false);
-//        }
-//
-//        RadioGroup hand = findViewById(R.id.hand);
-//        if (hand.getCheckedRadioButtonId() == -1) {
-//            // no radio buttons are checked
-//        } else {
-//            Button go = findViewById(R.id.playButton);
-//            go.setEnabled(true);
-//        }
-//
-//    }
-
-
-
     public void hand (View view) {
 
         randomWord();
 
         RadioGroup rg = findViewById(R.id.hand);
         Hand = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
-        //RadioGroup hand = findViewById(R.id.gamemode);
+
         if (rg.getCheckedRadioButtonId() == -1) {
             // no radio buttons are checked
         } else {
@@ -152,17 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void infodialog(View v) {
-        //final TextView Error = findViewById(R.id.errorMessage);
-       //final RadioGroup rg = findViewById(R.id.gamemode);
-
         Log.d("error", "mess");
+
         AlertDialog.Builder infoAlert = new AlertDialog.Builder(v.getContext());
         infoAlert.setTitle("Instructions");
-//        if (Game.equals("LETTER")){
-//            infoAlert.setMessage(R.string.mode1);
-//        } else {
-//            infoAlert.setMessage(R.string.mode);
-//        }
         infoAlert.setMessage(R.string.alertDialogMessage);
 
 
@@ -171,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 Intent data = new Intent("com.tesi.sensrec");
                 data.putExtra("User", User);
-                //data.putExtra("Game",Game);
                 data.putExtra("words", line);
                 data.putExtra("hand", Hand);
                 stopService();
