@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,17 +13,13 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import org.json.JSONArray;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -69,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_main);
         verifyStoragePermissions(this);
         Button go = findViewById(R.id.playButton);
         go.setEnabled(false);
@@ -77,11 +71,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startService() {
-        startService(new Intent(this, ansyncService.class));
+        startService(new Intent(this, AnsyncService.class));
     }
     // Stop the service
     public void stopService() {
-        stopService(new Intent(this, ansyncService.class));
+        stopService(new Intent(this, AnsyncService.class));
     }
 
 
@@ -89,8 +83,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        RadioGroup rg = findViewById(R.id.hand);
-//        rg.clearCheck();
+        RadioGroup rg = findViewById(R.id.hand);
+        rg.clearCheck();
+        EditText us = findViewById(R.id.editTextUsername);
+        us.setText("");
+        TextView error = findViewById(R.id.errorMessage);
+        error.setVisibility(View.INVISIBLE);
+        Button go = findViewById(R.id.playButton);
+        go.setEnabled(false);
     }
 
     public void StartRec(View view) {
@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void hand (View view) {
+
         randomWord();
 
         RadioGroup rg = findViewById(R.id.hand);
@@ -211,9 +212,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return line;
     }
-
-
-
 
 }
 

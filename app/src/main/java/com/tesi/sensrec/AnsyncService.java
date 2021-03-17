@@ -22,11 +22,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.Arrays;
 
 
 import static android.content.ContentValues.TAG;
 
-public class ansyncService extends Service {
+public class AnsyncService extends Service {
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();

@@ -8,6 +8,6 @@ class AutoStart extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        context.startService(new Intent(context, ansyncService.class));
+        context.startService(new Intent(context, AnsyncService.class));
     }
 }

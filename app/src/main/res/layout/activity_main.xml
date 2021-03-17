@@ -4,251 +4,210 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
     tools:context=".MainActivity">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="341dp"
-        android:layout_height="19dp"
-        android:text="@string/Displays"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/hand"
-        app:layout_constraintHorizontal_bias="0.228"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/chooseGame"
-        android:layout_width="341dp"
-        android:layout_height="19dp"
-        android:text="@string/Displays2"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/gamemode"
-        app:layout_constraintHorizontal_bias="0.228"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <RadioGroup
-        android:id="@+id/hand"
-        android:layout_width="386dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <RadioButton
-            android:id="@+id/h1"
-            android:layout_width="185dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/radio_flat_selector"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:onClick="hand"
-            android:text="LEFT"
-            android:textColor="@color/radio_flat_text_selector"
-            android:textSize="20dp" />
-
-        <RadioButton
-            android:id="@+id/h2"
-            android:layout_width="188dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/radio_flat_selector"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:onClick="hand"
-            android:text="RIGHT"
-            android:textColor="@color/radio_flat_text_selector"
-            android:textSize="20dp" />
-
-    </RadioGroup>
-
-
-    <RadioGroup
-        android:id="@+id/gamemode"
-        android:layout_width="386dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.751">
-
-
-        <RadioButton
-            android:id="@+id/game1"
-            android:layout_width="185dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/radio_flat_selector"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:onClick="onRadioButtonClicked"
-            android:text="LETTER"
-            android:textColor="@color/radio_flat_text_selector"
-            android:textSize="20dp" />
-
-        <RadioButton
-            android:id="@+id/game2"
-            android:layout_width="192dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/radio_flat_selector"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:onClick="onRadioButtonClicked"
-            android:text="SENTENCE"
-            android:textColor="@color/radio_flat_text_selector"
-            android:textSize="20dp" />
-
-    </RadioGroup>
-<!--
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="116dp"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-
-        <RadioButton
-            android:id="@+id/game1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onRadioButtonClicked"
-            android:text="lettera" />
-
-        <RadioButton
-            android:id="@+id/game2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onRadioButtonClicked"
-            android:text="frase" />
-
-    </RadioGroup>
--->
-    <EditText
-
-        android:id="@+id/editText"
-        android:layout_width="280dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:hint="@string/placeholder"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.069"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
 
     <TextView
         android:id="@+id/textViewUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/LogUser"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.027"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.084" />
+        app:layout_constraintBottom_toTopOf="@+id/editTextUsername"
+        app:layout_constraintVertical_bias="1"/>
 
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="122dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:onClick="StartRec"
-        android:text="PLAY"
+    <EditText
+        android:id="@+id/editTextUsername"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="@string/placeholder"
+        android:inputType="textPersonName"
+        android:backgroundTint="#96e08b"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gamemode"
-        app:layout_constraintVertical_bias="0.881" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.10" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/chooseHand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="44dp"
+        android:text="@string/Displays"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/editTextUsername"
+        app:layout_constraintBottom_toTopOf="@+id/hand"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <RadioGroup
+        android:id="@+id/hand"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35">
+
+
+        <RadioButton
+            android:id="@+id/h1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:layout_marginEnd="2.5dp"
+            android:onClick="hand"
+            android:text="@string/left"
+            android:textColor="@color/radio_flat_text_selector"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/h2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:layout_marginStart="2.5dp"
+            android:onClick="hand"
+            android:text="@string/right"
+            android:textColor="@color/radio_flat_text_selector"
+            android:textSize="20sp" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:text="@string/instructions"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/hand"
+        app:layout_constraintBottom_toTopOf="@+id/descriprionSentence"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/descriprionSentence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="17sp"
+        android:text="@string/mode"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6"/>
+
+<!--    <TextView-->
+<!--        android:id="@+id/chooseGame"-->
+<!--        android:layout_width="341dp"-->
+<!--        android:layout_height="19dp"-->
+<!--        android:text="@string/Displays2"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/gamemode"-->
+<!--        app:layout_constraintHorizontal_bias="0.228"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="1.0" />-->
+
+<!--    <RadioGroup-->
+<!--        android:id="@+id/gamemode"-->
+<!--        android:layout_width="386dp"-->
+<!--        android:layout_height="59dp"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:gravity="center_horizontal"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.444"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.751">-->
+
+
+<!--        <RadioButton-->
+<!--            android:id="@+id/game1"-->
+<!--            android:layout_width="185dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@drawable/radio_flat_selector"-->
+<!--            android:button="@android:color/transparent"-->
+<!--            android:gravity="center"-->
+<!--            android:onClick="onRadioButtonClicked"-->
+<!--            android:text="LETTER"-->
+<!--            android:textColor="@color/radio_flat_text_selector"-->
+<!--            android:textSize="20dp" />-->
+
+<!--        <RadioButton-->
+<!--            android:id="@+id/game2"-->
+<!--            android:layout_width="192dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@drawable/radio_flat_selector"-->
+<!--            android:button="@android:color/transparent"-->
+<!--            android:gravity="center"-->
+<!--            android:onClick="onRadioButtonClicked"-->
+<!--            android:text="SENTENCE"-->
+<!--            android:textColor="@color/radio_flat_text_selector"-->
+<!--            android:textSize="20dp" />-->
+
+<!--    </RadioGroup>-->
+
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/Error"
         android:textColor="@color/red"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/descriprionSentence"
+        app:layout_constraintBottom_toTopOf="@+id/playButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.131"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gamemode"
-        app:layout_constraintVertical_bias="0.894" />
+        app:layout_constraintVertical_bias="0.5" />
 
-<!--
     <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:onClick="configDialog"
-        android:text="configure"
+        android:id="@+id/playButton"
+        android:layout_width="130dp"
+        android:layout_height="49dp"
+        android:background="@drawable/play_flat_selector"
+        android:button="@android:color/transparent"
+        android:onClick="StartRec"
+        android:text="@string/play"
+        android:textColor="@color/radio_flat_text_selector"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.04"
-        app:layout_constraintStart_toEndOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.881" />
--->
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="376dp"
-        android:layout_height="102dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:textAlignment="center"
-        android:textSize="17dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
-        app:layout_constraintVertical_bias="0.415" />
-
+        app:layout_constraintVertical_bias="0.9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

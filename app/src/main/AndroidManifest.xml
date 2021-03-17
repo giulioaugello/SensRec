@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ansyncService" android:enabled="true"/>
+        <service android:name=".AnsyncService" android:enabled="true"/>
 
         <receiver android:name=".AutoStart">
             <intent-filter>

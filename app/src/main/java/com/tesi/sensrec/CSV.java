@@ -35,19 +35,17 @@ public class CSV {
         var.append("\n");
         //printWriter.append(TouchedView+"\n");
         //Log.d( "var:",var.toString());
-        //Log.i("api30api30", "IN WRITE: " + Arrays.toString(args) + ", touchedView: " + view + ", printW: " + printWriter + ", press: " + pressure);
-        //Log.i("api30api30", "IN WRITE: " + var);
-        printWriter.print(var);
 
-
-    }
-
-    public static void Write2 (long diffe,  PrintWriter printWriter){
-
-        StringBuilder var = new StringBuilder();
-        var.append(diffe);
-        var.append("\n");
         printWriter.print(var);
 
     }
+
+//    public static void Write2 (long diffe,  PrintWriter printWriter){
+//
+//        StringBuilder var = new StringBuilder();
+//        var.append(diffe);
+//        var.append("\n");
+//        printWriter.print(var);
+//
+//    }
 }
