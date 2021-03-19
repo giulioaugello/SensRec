@@ -237,9 +237,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 createCountDown(timer);
 
                 if (check.delete()){
-                    Log.i("pausepause", "resumeDialog cancellato");
+                    Log.i(TAG, "resumeDialog delete");
                 }else{
-                    Log.i("pausepause", "resumeDialog non cancellato");
+                    Log.i(TAG, "resumeDialog not delete");
                 }
                 createNewFileCSV();
             }
@@ -251,7 +251,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     protected void onResume (){
         super.onResume();
         onSensoResume();
-        Log.i("pausepause", "ONRESUME");
+        Log.i(TAG, "ONRESUME");
         if (pause) resumeDialog("THE GAME HAS BEEN INTERRUPTED","Please press ok to restart it");
 
     }
@@ -268,7 +268,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     protected void onPause(){
         super.onPause();
         //closeRoutine();
-        Log.i("pausepause", "ONPAUSE");
+        Log.i(TAG, "ONPAUSE");
         pause = true;
         mSensorManager.unregisterListener(this);
         countDown = false;
@@ -276,9 +276,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
 //        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
 //            if (check.delete()){
-//                Log.i("pausepause", "onPause cancellato");
+//                Log.i(TAG, "onPause cancellato");
 //            }else{
-//                Log.i("pausepause", "onPause non cancellato");
+//                Log.i(TAG, "onPause non cancellato");
 //            }
 //        }
 
@@ -297,9 +297,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         super.onBackPressed();
         //se torno indietro senza aver finito di scrivere cancella il file
         if (check.delete()){
-            Log.i("pausepause", "onPause cancellato");
+            Log.i(TAG, "onBackPressed delete");
         }else{
-            Log.i("pausepause", "onPause non cancellato");
+            Log.i(TAG, "onBackPressed not delete");
         }
 
     }
@@ -341,9 +341,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 printWriter.close();
                 countDown = false;
                 if (check.delete()){
-                    Log.i("pausepause", "failDialog cancellato");
+                    Log.i(TAG, "failDialog delete");
                 }else{
-                    Log.i("pausepause", "failDialog non cancellato");
+                    Log.i(TAG, "failDialog not delete");
                 }
                 finish();
             }
