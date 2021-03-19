@@ -110,7 +110,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         User = getIntent().getStringExtra("User");
         testWord = getIntent().getStringExtra("words");
         Hand = getIntent().getStringExtra("hand");
-
     }
 
     private void createCountDown(long currenTime) {
@@ -237,7 +236,11 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
                 createCountDown(timer);
 
-                check.delete();
+                if (check.delete()){
+                    Log.i("pausepause", "resumeDialog cancellato");
+                }else{
+                    Log.i("pausepause", "resumeDialog non cancellato");
+                }
                 createNewFileCSV();
             }
         });
@@ -245,11 +248,10 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         alert.show();
     }
 
-
-
     protected void onResume (){
         super.onResume();
         onSensoResume();
+        Log.i("pausepause", "ONRESUME");
         if (pause) resumeDialog("THE GAME HAS BEEN INTERRUPTED","Please press ok to restart it");
 
     }
@@ -266,10 +268,19 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     protected void onPause(){
         super.onPause();
         //closeRoutine();
+        Log.i("pausepause", "ONPAUSE");
         pause = true;
         mSensorManager.unregisterListener(this);
         countDown = false;
         printWriter.close();
+
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
+//            if (check.delete()){
+//                Log.i("pausepause", "onPause cancellato");
+//            }else{
+//                Log.i("pausepause", "onPause non cancellato");
+//            }
+//        }
 
         TextView cDTextView = findViewById(R.id.text_view_countdown);
         cDTextView.setVisibility(View.INVISIBLE);
@@ -278,6 +289,18 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             countDownTimer.cancel();
         }
         textKeyPressed.getText().clear();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //se torno indietro senza aver finito di scrivere cancella il file
+        if (check.delete()){
+            Log.i("pausepause", "onPause cancellato");
+        }else{
+            Log.i("pausepause", "onPause non cancellato");
+        }
 
     }
 
@@ -317,7 +340,11 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             public void onClick(DialogInterface dialog, int id) {
                 printWriter.close();
                 countDown = false;
-                check.delete();
+                if (check.delete()){
+                    Log.i("pausepause", "failDialog cancellato");
+                }else{
+                    Log.i("pausepause", "failDialog non cancellato");
+                }
                 finish();
             }
         });

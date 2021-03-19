@@ -45,9 +45,11 @@ public class AnsyncService extends Service {
         File myDirectoryPath = Environment.getExternalStorageDirectory();
         File dir = new File(String.valueOf(myDirectoryPath));
         File[] directoryListing = dir.listFiles();
+        Log.i("pausepause", "onstartcommand: " + directoryListing);
         if (directoryListing != null) {
             for (final File child : directoryListing) {
                 if (child.getName().contains(".csv")){
+                    Log.i("pausepause", "onstartcommand1: " + child);
                     Log.d(TAG, "onStartCommand: file:" + child);
                     Uri file = Uri.fromFile(child);
                     StorageReference riversRef = storageRef.child("rawCsv/" + file.getLastPathSegment());
