@@ -49,7 +49,7 @@ public class AnsyncService extends Service {
         Log.i(TAG, "onstartcommand: " + directoryListing);
         if (directoryListing != null) {
             for (final File child : directoryListing) {
-                if (child.getName().contains(".csv")){
+                if (child.getName().contains(".csv") && (child.getName().contains("-RIGHT-") || child.getName().contains("-LEFT-"))){
                     Log.i(TAG, "onstartcommand1: " + child);
                     Log.d(TAG, "onStartCommand: file:" + child);
                     Uri file = Uri.fromFile(child);
@@ -58,7 +58,7 @@ public class AnsyncService extends Service {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             if(child.delete()){
-                                //Toast.makeText(ansyncService.this, "deleted", Toast.LENGTH_LONG).show();
+                                Log.i(TAG, "onSuccess: delete " + child);
                             }
                         }
                     })

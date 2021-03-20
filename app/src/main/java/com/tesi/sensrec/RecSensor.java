@@ -295,7 +295,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //se torno indietro senza aver finito di scrivere cancella il file
+        //if I go back without finishing writing, it deletes the file
         if (check.delete()){
             Log.i(TAG, "onBackPressed delete");
         }else{
@@ -304,7 +304,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     }
 
-    //cancella il file e lo salva nello storage
     private void closeRoutine() {
         mSensorManager.unregisterListener(this);
         printWriter.close();
