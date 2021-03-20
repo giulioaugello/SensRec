@@ -63,13 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == REQUEST_EXTERNAL_STORAGE){
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
             }
         }
+
     }
 
     @Override
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
             br = new BufferedReader(new InputStreamReader(getAssets().open("TestWords.txt")));
             cont = 0;
-            int ran = new Random().nextInt(20) /*+ 1*/;
+            int ran = new Random().nextInt(30) /*+ 1*/;
             line = br.readLine();
             while (line != null && cont != ran) {
                 line = br.readLine();
