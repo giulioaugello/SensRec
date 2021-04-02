@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -27,8 +30,6 @@ import java.util.Random;
 
 import static android.view.View.VISIBLE;
 
-
-
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final String TAG = "Main Activity";
@@ -40,12 +41,39 @@ public class MainActivity extends AppCompatActivity {
     private BufferedReader br;
     private String User;
     private String Hand;
+    private String smartphone, smartphoneShared;
     private int cont = 0;
+
+    public SharedPreferences sharedPreferences;
 
    // private int  cont = 0;
     /* Checks if the app has permission to write to device storage
       If the app does not has permission then the user will be prompted to grant permissions
      @param activity*/
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
+        smartphoneShared = sharedPreferences.getString("smartphoneName", null);
+
+        EditText editSmartphone = findViewById(R.id.editTextSmartph);
+        if (smartphoneShared != null){
+            editSmartphone.setText(smartphoneShared);
+        }
+
+        Log.i("smartsmart", "onCreate " + smartphoneShared);
+
+        verifyStoragePermissions(this);
+
+        Button go = findViewById(R.id.playButton);
+        go.setEnabled(false);
+
+        startService();
+    }
 
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
@@ -72,16 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        verifyStoragePermissions(this);
-        Button go = findViewById(R.id.playButton);
-        go.setEnabled(false);
-        startService();
-    }
-
     public void startService() {
         startService(new Intent(this, AnsyncService.class));
     }
@@ -97,21 +115,36 @@ public class MainActivity extends AppCompatActivity {
         rg.clearCheck();
         EditText us = findViewById(R.id.editTextUsername);
         us.setText("");
-        TextView error = findViewById(R.id.errorMessage);
-        error.setVisibility(View.INVISIBLE);
+        EditText editSmartphone = findViewById(R.id.editTextSmartph);
+        String shared = sharedPreferences.getString("smartphoneName", null);
+        if (shared != null){
+            editSmartphone.setText(shared);
+        }
+        Log.i("smartsmart", "onResume " + smartphoneShared + " " + shared);
+//        editSmartphone.setText("");
+//        TextView error = findViewById(R.id.errorMessage);
+//        error.setVisibility(View.INVISIBLE);
         Button go = findViewById(R.id.playButton);
         go.setEnabled(false);
     }
 
     public void StartRec(View view) {
 
-        TextView error = findViewById(R.id.errorMessage);
-        EditText editlabel = findViewById(R.id.editTextUsername);
+        //TextView error = findViewById(R.id.errorMessage);
+        EditText editTextUsername = findViewById(R.id.editTextUsername);
+        EditText editTextSmartphone = findViewById(R.id.editTextSmartph);
 
-        User = editlabel.getText().toString();
-        if (User.isEmpty()) {
-            error.setVisibility(VISIBLE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        User = editTextUsername.getText().toString();
+        smartphone = editTextSmartphone.getText().toString();
+
+        if (User.isEmpty() || smartphone.isEmpty()) {
+            Toast.makeText(this, getResources().getString(R.string.Error), Toast.LENGTH_LONG).show();
+            //error.setVisibility(View.VISIBLE);
         } else {
+            editor.putString("smartphoneName", smartphone).apply();
+            Log.i("smartsmart", smartphone);
             infodialog(view);
         }
 
@@ -148,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 data.putExtra("User", User);
                 data.putExtra("words", line);
                 data.putExtra("hand", Hand);
+                //data.putExtra("smartphone", smartphoneShared);
                 stopService();
                 startActivity(data);
             }

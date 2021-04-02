@@ -3,6 +3,7 @@ package com.tesi.sensrec;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -61,6 +62,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     private String TestName;
     private String undo;
     private String Hand;
+    private String smartphone;
     private long timer;
     private long tmpTimer;
     private long lefTime;
@@ -110,6 +112,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         User = getIntent().getStringExtra("User");
         testWord = getIntent().getStringExtra("words");
         Hand = getIntent().getStringExtra("hand");
+        //smartphone = getIntent().getStringExtra("smartphone");
     }
 
     private void createCountDown(long currenTime) {
@@ -187,7 +190,13 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
             }
             long time = System.currentTimeMillis();
-            filename = User +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
+
+            SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
+            smartphone = sharedPreferences.getString("smartphoneName", null);
+            Log.i("smartsmart", "RecSensor " + smartphone);
+            String upperSmartphone = smartphone.toUpperCase();
+
+            filename = User +  "-" + upperSmartphone +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
             Log.d(TAG, "onCreate: " + filename);
             check = new File(path + "/" + filename);
             //FilePath = path+"/"+filename;

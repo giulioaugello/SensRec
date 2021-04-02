@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SensRec</string>
-    <string name="placeholder">Insert Username</string>
+    <string name="placeholder">Username</string>
+    <string name="placeholdersmart">Smartphone name</string>
     <string name="right">RIGHT</string>
     <string name="left">LEFT</string>
     <string name="instructions">Instructions</string>
@@ -9,21 +10,22 @@
     <string name="wrongKey">You type the wrong key, take your time</string>
     <string name="word">Insert word</string>
     <string name="LogUser">Insert Username</string>
+    <string name="insSmartphone">Insert Smartphone Name</string>
     <string name="GO">GO</string>
-    <string name="Error">Please insert Username first</string>
-    <string name="Error2">Please use only lowercase</string>
-    <string name="Error3">you typed the wrong key</string>
-    <string name="Error4">Remember to hold the key until the word background turns green </string>
-    <string name="Info">Insert the word on the screen. hold down the key until the word background turns green.</string>
+    <string name="Error">Please insert all fields</string>
+<!--    <string name="Error2">Please use only lowercase</string>-->
+<!--    <string name="Error3">you typed the wrong key</string>-->
+<!--    <string name="Error4">Remember to hold the key until the word background turns green </string>-->
+<!--    <string name="Info">Insert the word on the screen. hold down the key until the word background turns green.</string>-->
     <string name="Displays">Choose the hand you will use</string>
-    <string name="Displays2">Choose the game mode</string>
-    <string name="View2">2</string>
-    <string name="View4">4</string>
-    <string name="View8">8</string>
-    <string name="View16">16</string>
-    <string name="View32">32</string>
-    <string name="View64">64</string>
-    <string name="View128">128</string>
-    <string name="mode">Enter the sentence appearing on the screen during the specified time. Try not to be in a hurry and not to trespass the specified time </string>
-    <string name="mode1">Click on the letters appearing in the screen until you create a word. Press the letter during the specified time, decreasing as the letters move forward </string>
+<!--    <string name="Displays2">Choose the game mode</string>-->
+<!--    <string name="View2">2</string>-->
+<!--    <string name="View4">4</string>-->
+<!--    <string name="View8">8</string>-->
+<!--    <string name="View16">16</string>-->
+<!--    <string name="View32">32</string>-->
+<!--    <string name="View64">64</string>-->
+<!--    <string name="View128">128</string>-->
+    <string name="mode">Enter the sentence appearing on the screen during the specified time. Try not to be in a hurry and not to trespass the specified time. </string>
+<!--    <string name="mode1">Click on the letters appearing in the screen until you create a word. Press the letter during the specified time, decreasing as the letters move forward </string>-->
 </resources>
