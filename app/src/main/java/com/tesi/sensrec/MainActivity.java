@@ -8,6 +8,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private int cont = 0;
 
     public SharedPreferences sharedPreferences;
+    private String blockCharacterSet = "-.";
 
    // private int  cont = 0;
     /* Checks if the app has permission to write to device storage
@@ -61,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         smartphoneShared = sharedPreferences.getString("smartphoneName", null);
 
         EditText editSmartphone = findViewById(R.id.editTextSmartph);
+
         if (smartphoneShared != null){
             editSmartphone.setText(smartphoneShared);
         }
@@ -142,7 +148,9 @@ public class MainActivity extends AppCompatActivity {
         if (User.isEmpty() || smartphone.isEmpty()) {
             Toast.makeText(this, getResources().getString(R.string.Error), Toast.LENGTH_LONG).show();
             //error.setVisibility(View.VISIBLE);
-        } else {
+        } else if (smartphone.contains("-") || smartphone.contains(".") || User.contains("-") || User.contains(".")){
+            Toast.makeText(this, getResources().getString(R.string.noSpecial), Toast.LENGTH_LONG).show();
+        }else {
             editor.putString("smartphoneName", smartphone).apply();
             Log.i("smartsmart", smartphone);
             infodialog(view);

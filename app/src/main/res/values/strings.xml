@@ -13,6 +13,7 @@
     <string name="insSmartphone">Insert Smartphone Name</string>
     <string name="GO">GO</string>
     <string name="Error">Please insert all fields</string>
+    <string name="noSpecial">Do not insert special characters</string>
 <!--    <string name="Error2">Please use only lowercase</string>-->
 <!--    <string name="Error3">you typed the wrong key</string>-->
 <!--    <string name="Error4">Remember to hold the key until the word background turns green </string>-->
