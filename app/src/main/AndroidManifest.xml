@@ -18,16 +18,17 @@
         android:preserveLegacyExternalStorage="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".RecSensor"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter >
                 <action android:name="com.tesi.sensrec" />

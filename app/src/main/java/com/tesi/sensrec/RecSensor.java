@@ -4,6 +4,7 @@ package com.tesi.sensrec;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,7 +13,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,62 +40,72 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 
 public class RecSensor extends AppCompatActivity implements SensorEventListener {
+
+    private final String TAG = "RecSensor";
+
     private SensorManager mSensorManager;
     private Sensor mAcc, mGyr, mMag, mGrav;
-    private float[]SensorVal= new float[15];
-    private String filename;
+
+    private float[]SensorVal= new float[15]; //contiene tutti i valori da stampare
 
     //Array of Last accelleration and magnetic value for Orientation
     private float[] mLastAcc = new float[3];
     private float[] mLastMag = new float[3];
+
     private boolean mLastAccSet = false;
     private boolean mLastMagSet = false;
-    private float[] mR = new float[9];
+
+    private float[] mR = new float[9]; //serve per getRotation (in onSensorChanged)
     private float[] mOrientation = new float[3];
     private float pressure;
+
     private String User;
-    private String Game;
     private String testWord;
-    private String line;
-    private String TestName;
-    private String undo;
     private String Hand;
     private String smartphone;
+
+    private String undo;
     private long timer;
-    private long tmpTimer;
     private long lefTime;
-    private int cont;
     private CountDownTimer countDownTimer;
-    private int numchar;
-    private File check;
-    private EditText textKeyPressed;
-    private PrintWriter printWriter;
-    private TextView textToWrite;
-    private TextView textView2;
-    private String TouchedView = String.valueOf(-1);
-    private final String TAG = "RecSensor";
-    private BufferedReader br;
     private long time = 0;
     private boolean countDown= false;
     private boolean end = false;
-    private ArrayList<String> listWords = new ArrayList<>();
-    private boolean Ct;
-    private boolean finish;
     private boolean pause;
-    private ArrayList<File> Files = new ArrayList<>();
+
+    private EditText textKeyPressed;
+    private TextView textToWrite;
+    private TextView textView2;
+    private String TouchedView = String.valueOf(-1);
+
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
+    private File check;
+    private String filename;
+    private PrintWriter printWriter;
+    private BufferedReader br;
+    private ArrayList<File> Files = new ArrayList<>();
 
-
+    private long countWordDone;
+    private String[] arrOfStr;
+    private String tempText;
+    private String wordDone;
+    private SpannableString ssb;
+    private BackgroundColorSpan bcsYellow;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,28 +115,34 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         setSensor();
         createNewFileCSV();
         countDown = false;
+
+        arrOfStr = new String[2];
+        tempText = textToWrite.getText().toString();
+        wordDone = "";
+        countWordDone = timer;
+        ssb = new SpannableString (textToWrite.getText().toString());
+        bcsYellow = new BackgroundColorSpan(Color.YELLOW);
     }
 
     private void setSensor() {
-        mSensorManager= (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-        mAcc=  mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mGyr=  mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mMag=  mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        mGrav= mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        mAcc = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mGyr = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mMag = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mGrav = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
     }
 
     private void setData() {
         User = getIntent().getStringExtra("User");
         testWord = getIntent().getStringExtra("words");
         Hand = getIntent().getStringExtra("hand");
-        //smartphone = getIntent().getStringExtra("smartphone");
     }
 
     private void createCountDown(long currenTime) {
         timer = currenTime;
         end = false;
 
-        countDownTimer = new CountDownTimer(timer,100) {
+        countDownTimer = new CountDownTimer(currenTime,100) {
 
 
             @Override
@@ -177,6 +200,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }else if (testWord.length() >= 40){
             timer = 50000;
         }
+        //Log.i("wordword", "NOOOOOOO");
         createCountDown(timer);
 
     }
@@ -189,11 +213,11 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
                 path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
             }
+
             long time = System.currentTimeMillis();
 
             SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
             smartphone = sharedPreferences.getString("smartphoneName", null);
-            Log.i("smartsmart", "RecSensor " + smartphone);
             String upperSmartphone = smartphone.toUpperCase();
 
             filename = User +  "-" + upperSmartphone +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
@@ -212,6 +236,63 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
         }catch (IOException e){
             Log.i(TAG, "CATCH: " + e.getMessage());
+        }
+    }
+
+    private void changeFile(File oldfile, String fName, String removeTerm){ //16 campo della lettera
+
+        File path = null;
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
+            path = Environment.getExternalStorageDirectory();
+        } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
+            path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        }
+
+        int position = 16;
+        String tempFile = "temp.csv";
+        File newFile = new File(path + "/" + tempFile);
+
+        String currentLine;
+        String[] data;
+
+        try { //189-221-312
+
+            FileWriter fileWriter = new FileWriter(tempFile, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            PrintWriter printWriter1 = new PrintWriter(bufferedWriter);
+
+            String oldFileNameFull = path + "/" + fName;
+            FileReader fileReader = new FileReader(oldFileNameFull);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            while((currentLine = bufferedReader.readLine()) != null){
+
+                data = currentLine.split(",");
+
+                if (!(data[position].equalsIgnoreCase(removeTerm))){
+                    printWriter1.println(currentLine);
+                }
+
+            }
+
+            printWriter1.flush();
+            printWriter1.close();
+            fileReader.close();
+            bufferedReader.close();
+            bufferedWriter.close();
+            fileWriter.close();
+
+            if (oldfile.delete()){
+                Log.i("filefile", "old file delete");
+            }
+            File dump = new File(oldFileNameFull);
+            if (newFile.renameTo(dump)){
+                Log.i("filefile", "new file rename");
+            }
+
+
+        }catch (Exception e){
+            Log.i("filefile", "Catch: " + e.getMessage());
         }
     }
 
@@ -261,7 +342,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         super.onResume();
         onSensoResume();
         Log.i(TAG, "ONRESUME");
-        if (pause) resumeDialog("THE GAME HAS BEEN INTERRUPTED","Please press ok to restart it");
+        if (pause) {
+            resumeDialog("The game has been interrupted","Please press ok to restart it");
+        }
 
     }
 
@@ -304,7 +387,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //if I go back without finishing writing, it deletes the file
+        //go back without finishing writing, it deletes the file
         if (check.delete()){
             Log.i(TAG, "onBackPressed delete");
         }else{
@@ -368,11 +451,8 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         TextView time = findViewById(R.id.text_view_countdown);
         time.setText(timeLeftFormatted);
 
-        Log.d("Timer",String.valueOf(timer));
+        Log.d("Timer", String.valueOf(timer));
     }
-
-
-
 
     public View.OnTouchListener handleTouch = new View.OnTouchListener() {
 
@@ -395,24 +475,96 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             return true;
         }
 
-        private void checkString(View v) {
-            if (!textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())) {
-                TextView error = findViewById(R.id.textViewWrongKey);
-                error.setVisibility(View.VISIBLE);
-                textKeyPressed.setText(undo);
+    };
 
-            } else if (textToWrite.getText().toString().equals(textKeyPressed.getText().toString())) {
-                    countDownTimer.cancel();
-                    finishDialog("Game Over");
-            }else if (textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
+    private void checkString(View v) {
+        if (!textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())) {
+            TextView error = findViewById(R.id.textViewWrongKey);
+            error.setVisibility(View.VISIBLE);
+            //textKeyPressed.setText(undo);
 
+            textKeyPressed.setText(wordDone);
+
+            mSensorManager.unregisterListener(this);
+            countDownTimer.cancel();
+            countDown = false;
+
+            createCountDown(countWordDone);
+
+            //settare un booleano a true per la funzione di modifica file che chiamo in game over
+
+        } else if (textToWrite.getText().toString().equals(textKeyPressed.getText().toString())) {
+
+            countDownTimer.cancel();
+            finishDialog("Game Over");
+
+        }else if (textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
+
+            textKeyPressed.addTextChangedListener(mTextEditorWatcher);
+
+        }
+    }
+
+    private final TextWatcher mTextEditorWatcher = new TextWatcher() {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //This sets a textview to the current length
+            if (textToWrite.getText().toString().startsWith(s.toString())){
+                ssb.setSpan(bcsYellow, 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textToWrite.setText(ssb);
             }
         }
 
+        public void afterTextChanged(Editable s) {
+        }
     };
+
+    //viene chiamata ogni volta che premo un tasto sulla tastiera
+    private void SentenceMode(View v) {
+        TextView error = findViewById(R.id.textViewWrongKey);
+        error.setVisibility(View.INVISIBLE);
+
+        TouchedView = v.getTag().toString(); //quando premo imposta touchedView con l'ultimo tasto premuto
+        undo = textKeyPressed.getText().toString(); //è la frase scritta prima di premere un nuovo tasto
+        textKeyPressed.append(TouchedView);
+//        Log.i("wordword", TouchedView + " ... " + undo);
+
+        String firstCharacter = tempText.substring(0, 1);
+
+        //quando premo spazio e ho effettivamente uno spazio da premere
+        if(TouchedView.equals(" ") && textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
+
+            arrOfStr = tempText.split(" ", 2); //divide sempre in 2 tempText quando premo lo spazio
+            wordDone = wordDone + arrOfStr[0] + " "; //frase precedente all'errore
+            tempText = arrOfStr[1]; //frase che devo ancora scrivere
+
+            countWordDone = timer; //salvo il timer quando premo spazio per reinserirlo se sbaglio
+
+            Log.i("wordword", Arrays.toString(arrOfStr) + " AAA " + tempText + " AAA " + wordDone);
+        }else if (TouchedView.equals(firstCharacter) && textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
+            Log.i("wordword", "EHI: " + firstCharacter);
+        }
+
+
+
+        if(!countDown) {
+            //Log.i("wordword", "SIIII");
+            onSensoResume();
+            countDownTimer.start();
+            countDown = true;
+            TextView cDTextView = findViewById(R.id.text_view_countdown);
+            cDTextView.setVisibility(View.VISIBLE);
+            updateCountDownText();
+        }
+    }
 
     public void finishDialog(String s) {
         Log.d("error", "mess");
+
+        //chiamare la funzione di modifica file se il booleano è true
+
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
         miaAlert.setTitle(s);
 
@@ -426,24 +578,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         });
         AlertDialog alert = miaAlert.create();
         alert.show();
-    }
-
-    //viene chiamata ogni volta che premo un tasto sulla tastiera
-    private void SentenceMode(View v) {
-        TextView error = findViewById(R.id.textViewWrongKey);
-        error.setVisibility(View.INVISIBLE);
-
-        TouchedView = v.getTag().toString(); //quando premo imposta touchedView con l'ultimo tasto premuto
-        undo = textKeyPressed.getText().toString(); //è la frase scritta prima di premere un nuovo tasto
-        textKeyPressed.append(TouchedView);
-
-        if(!countDown) {
-            countDownTimer.start();
-            countDown = true;
-            TextView cDTextView = findViewById(R.id.text_view_countdown);
-            cDTextView.setVisibility(View.VISIBLE);
-            updateCountDownText();
-        }
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -461,7 +595,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     public void onSensorChanged(SensorEvent event) {
         //When one of sensors change its values these will be saved in SensorVal
-        // Log.d("TAG", "SensorChanged : " + TouchedView);
+        Log.i(TAG, "SensorChanged: " + TouchedView);
 
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             System.arraycopy(event.values, 0, SensorVal, 0, event.values.length);

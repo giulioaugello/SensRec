@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private int cont = 0;
 
     public SharedPreferences sharedPreferences;
-    private String blockCharacterSet = "-.";
 
    // private int  cont = 0;
     /* Checks if the app has permission to write to device storage
