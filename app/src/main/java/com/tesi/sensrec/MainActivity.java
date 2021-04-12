@@ -2,10 +2,13 @@ package com.tesi.sensrec;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +16,8 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -226,6 +231,34 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "onCreate: " + e.getMessage());
         }
         return line;
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.counters) {
+            countersDialog();
+        }
+        return MainActivity.super.onOptionsItemSelected(item);
+    }
+
+    private void countersDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setCancelable(true);
+
+        final View view  = getLayoutInflater().inflate(R.layout.counters_dialog,null);
+        dialog.setContentView(view);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        dialog.show();
     }
 
 }

@@ -7,13 +7,15 @@
     <string name="instructions">Instructions</string>
     <string name="play">Play</string>
     <string name="alertDialogMessage">Press OK to start playing or CANCEL to go back!</string>
-    <string name="wrongKey">You type the wrong key, take your time</string>
+    <string name="wrongKey">You type the wrong key, take your time! Press the green button to resume the game</string>
+    <string name="resume">Resume</string>
     <string name="word">Insert word</string>
     <string name="LogUser">Insert Username</string>
     <string name="insSmartphone">Insert Smartphone Name</string>
     <string name="GO">GO</string>
     <string name="Error">Please insert all fields</string>
     <string name="noSpecial">Do not insert special characters</string>
+    <string name="counters">Counters</string>
 <!--    <string name="Error2">Please use only lowercase</string>-->
 <!--    <string name="Error3">you typed the wrong key</string>-->
 <!--    <string name="Error4">Remember to hold the key until the word background turns green </string>-->

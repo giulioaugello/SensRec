@@ -108,12 +108,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     private String wordDone;
     private SpannableString ssb;
     private BackgroundColorSpan bcsYellow;
-    private ArrayList<Long> startLong;
-    private ArrayList<Long> endLong;
-    private ArrayList<ArrayList<Long>> startTimeWrongKey;
-    private ArrayList<ArrayList<Long>> endTimeWrongKey;
     private String firstCharacter;
-    private ArrayList<StringBuilder> lastWord;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,10 +125,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         countWordDone = timer;
         ssb = new SpannableString (textToWrite.getText().toString());
         bcsYellow = new BackgroundColorSpan(Color.YELLOW);
-        startTimeWrongKey = new ArrayList<>();
-        endTimeWrongKey = new ArrayList<>();
         rowsToLoad = new ArrayList<>();
-        lastWord = new ArrayList<>();
     }
 
     private void setSensor() {
@@ -308,15 +300,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-
     public void resumeDialog(String title, String message) {
         Log.d("error", "mess");
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
@@ -466,9 +449,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         Log.d("Timer", String.valueOf(timer));
     }
 
-
-
-
     public View.OnTouchListener handleTouch = new View.OnTouchListener() {
 
         @Override
@@ -492,29 +472,30 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     };
 
-
-
-
     private void checkString(View v) {
+
         if (!textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())) {
+
             TextView error = findViewById(R.id.textViewWrongKey);
             error.setVisibility(View.VISIBLE);
 
             Button retryButton = findViewById(R.id.retry_button);
             retryButton.setVisibility(View.VISIBLE);
-            //textKeyPressed.setText(undo);
 
-            textKeyPressed.setText(wordDone);
+            textKeyPressed.setText(wordDone); //setto la parola precedente
 
+            mSensorManager.unregisterListener(this); //stoppo i sensori
 
-            mSensorManager.unregisterListener(this);
+            //aggiorno il timer
             countDownTimer.cancel();
-            countDown = false;
-
             createCountDown(countWordDone);
+            TextView cDTextView = findViewById(R.id.text_view_countdown);
+            cDTextView.setVisibility(View.VISIBLE);
+            updateCountDownText();
 
-            rowsToLoad.clear();
+            rowsToLoad.clear(); //cancello elementi in array (perchè contiene righe sbagliate)
 
+            //disattivo la tastiera
             ArrayList<View> allButtons;
             allButtons = (findViewById(R.id.keyboard)).getTouchables();
             for(View tmp : allButtons){
@@ -524,28 +505,27 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             retryButton.setOnClickListener(v1 -> {
 
-                if(!countDown) {
-                    onSensoResume();
-                    countDownTimer.start();
-                    countDown = true;
-                    TextView cDTextView = findViewById(R.id.text_view_countdown);
-                    cDTextView.setVisibility(View.VISIBLE);
-                    updateCountDownText();
-                    retryButton.setVisibility(View.INVISIBLE);
+                //riattivo sensori e tastiera
+                onSensoResume();
+                countDownTimer.start();
 
-                    for(View tmp : allButtons){
-                        Button tmpButton = (Button) tmp;
-                        tmpButton.setEnabled(true);
-                    }
+                error.setVisibility(View.INVISIBLE);
+                retryButton.setVisibility(View.GONE);
+
+                for(View tmp : allButtons){
+                    Button tmpButton = (Button) tmp;
+                    tmpButton.setEnabled(true);
                 }
+
             });
 
         } else {
 
-            textKeyPressed.addTextChangedListener(mTextEditorWatcher);
+            textKeyPressed.addTextChangedListener(mTextEditorWatcher); //aggiunge il lister per background del textToWrite
 
             if (textToWrite.getText().toString().equals(textKeyPressed.getText().toString())) {
 
+                //scrivo l'ultima parola e svuota array
                 for (StringBuilder stringBuilder: rowsToLoad){
                     printWriter.print(stringBuilder);
                 }
@@ -556,6 +536,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             } else if (textKeyPressed.getText().toString().endsWith(" ")){
 
+                //scrive tutte le righe che contiene l'array nel file e le cancella dopo averle scritte
                 for (StringBuilder stringBuilder: rowsToLoad){
                     printWriter.print(stringBuilder);
                 }
@@ -579,7 +560,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }
 
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //This sets a textview to the current length
+            //add yellow background to textToWrite
             if (textToWrite.getText().toString().startsWith(s.toString())){
                 ssb.setSpan(bcsYellow, 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 textToWrite.setText(ssb);
@@ -592,53 +573,38 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     //viene chiamata ogni volta che premo un tasto sulla tastiera
     private void SentenceMode(View v) {
-        TextView error = findViewById(R.id.textViewWrongKey);
-        error.setVisibility(View.INVISIBLE);
 
-        TouchedView = v.getTag().toString(); //quando premo imposta touchedView con l'ultimo tasto premuto
+        TouchedView = v.getTag().toString(); //quando premo imposta touchedView con l'ultimo tasto premuto (o -1 se non premo nulla)
         undo = textKeyPressed.getText().toString(); //è la frase scritta prima di premere un nuovo tasto
         textKeyPressed.append(TouchedView);
 //        Log.i("wordword", TouchedView + " ... " + undo);
-
-
-        firstCharacter = tempText.substring(0, 1);
+//        firstCharacter = tempText.substring(0, 1);
 
         //quando premo spazio e ho effettivamente uno spazio da premere
         if(TouchedView.equals(" ") && textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
 
-            arrOfStr = tempText.split(" ", 2); //divide sempre in 2 tempText quando premo lo spazio
-            wordDone = wordDone + arrOfStr[0] + " "; //frase precedente all'errore
+            arrOfStr = tempText.split(" ", 2); //divide in 2 tempText (separa prima parola con il resto)
+            wordDone = wordDone + arrOfStr[0] + " "; //frase precedente all'errore (viene impostata in checkString())
             tempText = arrOfStr[1]; //frase che devo ancora scrivere
 
             countWordDone = timer; //salvo il timer quando premo spazio per reinserirlo se sbaglio
 
             Log.i("wordword", Arrays.toString(arrOfStr) + " AAA " + tempText + " AAA " + wordDone + " AAA " + arrOfStr[0]);
 
-        } else if (TouchedView.equals(firstCharacter) && textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
-
-            startLong = new ArrayList<>();
-
-        }else if (!textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
-
-            endLong = new ArrayList<>();
-
         }
 
         if(!countDown) {
-            //Log.i("wordword", "SIIII");
-            //onSensoResume();
             countDownTimer.start();
             countDown = true;
             TextView cDTextView = findViewById(R.id.text_view_countdown);
             cDTextView.setVisibility(View.VISIBLE);
             updateCountDownText();
         }
+
     }
 
     public void finishDialog(String s) {
         Log.d("error", "mess");
-
-        //chiamare la funzione di modifica file se il booleano è true
 
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
         miaAlert.setTitle(s);
@@ -657,15 +623,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.info) {
-
-        }
-        return RecSensor.super.onOptionsItemSelected(item);
     }
 
     public void onSensorChanged(SensorEvent event) {
