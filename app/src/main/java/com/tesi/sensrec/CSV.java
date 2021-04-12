@@ -11,10 +11,39 @@ import java.util.Arrays;
 
 public class CSV {
 
-    public static void Write(float[] args, String view, PrintWriter printWriter, float pressure){
+//    public static void Write(float[] args, String view, PrintWriter printWriter, float pressure, long time){
+//
+//        StringBuilder var = new StringBuilder();
+//        var.append(time);
+//        var.append(",");
+//        //printWriter.print(System.currentTimeMillis());
+//
+//        //printWriter.append(",");
+//
+//
+//        //append all elements in args(SensorVal)
+//        for(float n: args){
+//            var.append(n);
+//            var.append(",");
+//            //printWriter.print(n);
+//            //printWriter.append(",");
+//
+//        }
+//        var.append(view);
+//        var.append(",");
+//        var.append(pressure);
+//        var.append("\n");
+//        //printWriter.append(TouchedView+"\n");
+//        //Log.d( "var:",var.toString());
+//
+//        printWriter.print(var);
+//
+//    }
+
+    public static StringBuilder generateCSVRow(float[] args, String view, float pressure, long time){
 
         StringBuilder var = new StringBuilder();
-        var.append(System.currentTimeMillis());
+        var.append(time);
         var.append(",");
         //printWriter.print(System.currentTimeMillis());
 
@@ -36,7 +65,9 @@ public class CSV {
         //printWriter.append(TouchedView+"\n");
         //Log.d( "var:",var.toString());
 
-        printWriter.print(var);
+        //printWriter.print(var);
+
+        return var;
 
     }
 

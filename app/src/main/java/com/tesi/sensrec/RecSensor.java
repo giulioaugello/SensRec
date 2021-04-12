@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     private Sensor mAcc, mGyr, mMag, mGrav;
 
     private float[]SensorVal= new float[15]; //contiene tutti i valori da stampare
+    private ArrayList<StringBuilder> rowsToLoad;
 
     //Array of Last accelleration and magnetic value for Orientation
     private float[] mLastAcc = new float[3];
@@ -106,6 +108,12 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     private String wordDone;
     private SpannableString ssb;
     private BackgroundColorSpan bcsYellow;
+    private ArrayList<Long> startLong;
+    private ArrayList<Long> endLong;
+    private ArrayList<ArrayList<Long>> startTimeWrongKey;
+    private ArrayList<ArrayList<Long>> endTimeWrongKey;
+    private String firstCharacter;
+    private ArrayList<StringBuilder> lastWord;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,6 +130,10 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         countWordDone = timer;
         ssb = new SpannableString (textToWrite.getText().toString());
         bcsYellow = new BackgroundColorSpan(Color.YELLOW);
+        startTimeWrongKey = new ArrayList<>();
+        endTimeWrongKey = new ArrayList<>();
+        rowsToLoad = new ArrayList<>();
+        lastWord = new ArrayList<>();
     }
 
     private void setSensor() {
@@ -454,6 +466,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         Log.d("Timer", String.valueOf(timer));
     }
 
+
+
+
     public View.OnTouchListener handleTouch = new View.OnTouchListener() {
 
         @Override
@@ -477,13 +492,20 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     };
 
+
+
+
     private void checkString(View v) {
         if (!textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())) {
             TextView error = findViewById(R.id.textViewWrongKey);
             error.setVisibility(View.VISIBLE);
+
+            Button retryButton = findViewById(R.id.retry_button);
+            retryButton.setVisibility(View.VISIBLE);
             //textKeyPressed.setText(undo);
 
             textKeyPressed.setText(wordDone);
+
 
             mSensorManager.unregisterListener(this);
             countDownTimer.cancel();
@@ -491,18 +513,65 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             createCountDown(countWordDone);
 
-            //settare un booleano a true per la funzione di modifica file che chiamo in game over
+            rowsToLoad.clear();
 
-        } else if (textToWrite.getText().toString().equals(textKeyPressed.getText().toString())) {
+            ArrayList<View> allButtons;
+            allButtons = (findViewById(R.id.keyboard)).getTouchables();
+            for(View tmp : allButtons){
+                Button tmpButton = (Button) tmp;
+                tmpButton.setEnabled(false);
+            }
 
-            countDownTimer.cancel();
-            finishDialog("Game Over");
+            retryButton.setOnClickListener(v1 -> {
 
-        }else if (textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
+                if(!countDown) {
+                    onSensoResume();
+                    countDownTimer.start();
+                    countDown = true;
+                    TextView cDTextView = findViewById(R.id.text_view_countdown);
+                    cDTextView.setVisibility(View.VISIBLE);
+                    updateCountDownText();
+                    retryButton.setVisibility(View.INVISIBLE);
+
+                    for(View tmp : allButtons){
+                        Button tmpButton = (Button) tmp;
+                        tmpButton.setEnabled(true);
+                    }
+                }
+            });
+
+        } else {
 
             textKeyPressed.addTextChangedListener(mTextEditorWatcher);
 
+            if (textToWrite.getText().toString().equals(textKeyPressed.getText().toString())) {
+
+                for (StringBuilder stringBuilder: rowsToLoad){
+                    printWriter.print(stringBuilder);
+                }
+                rowsToLoad.clear();
+
+                countDownTimer.cancel();
+                finishDialog("Game Over");
+
+            } else if (textKeyPressed.getText().toString().endsWith(" ")){
+
+                for (StringBuilder stringBuilder: rowsToLoad){
+                    printWriter.print(stringBuilder);
+                }
+                rowsToLoad.clear();
+            }
         }
+//        else if (textToWrite.getText().toString().equals(textKeyPressed.getText().toString())) {
+//
+//            countDownTimer.cancel();
+//            finishDialog("Game Over");
+//
+//        }else if (textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
+//
+//            textKeyPressed.addTextChangedListener(mTextEditorWatcher);
+//
+//        }
     }
 
     private final TextWatcher mTextEditorWatcher = new TextWatcher() {
@@ -531,7 +600,8 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         textKeyPressed.append(TouchedView);
 //        Log.i("wordword", TouchedView + " ... " + undo);
 
-        String firstCharacter = tempText.substring(0, 1);
+
+        firstCharacter = tempText.substring(0, 1);
 
         //quando premo spazio e ho effettivamente uno spazio da premere
         if(TouchedView.equals(" ") && textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
@@ -542,16 +612,21 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             countWordDone = timer; //salvo il timer quando premo spazio per reinserirlo se sbaglio
 
-            Log.i("wordword", Arrays.toString(arrOfStr) + " AAA " + tempText + " AAA " + wordDone);
-        }else if (TouchedView.equals(firstCharacter) && textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
-            Log.i("wordword", "EHI: " + firstCharacter);
+            Log.i("wordword", Arrays.toString(arrOfStr) + " AAA " + tempText + " AAA " + wordDone + " AAA " + arrOfStr[0]);
+
+        } else if (TouchedView.equals(firstCharacter) && textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
+
+            startLong = new ArrayList<>();
+
+        }else if (!textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
+
+            endLong = new ArrayList<>();
+
         }
-
-
 
         if(!countDown) {
             //Log.i("wordword", "SIIII");
-            onSensoResume();
+            //onSensoResume();
             countDownTimer.start();
             countDown = true;
             TextView cDTextView = findViewById(R.id.text_view_countdown);
@@ -595,7 +670,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     public void onSensorChanged(SensorEvent event) {
         //When one of sensors change its values these will be saved in SensorVal
-        Log.i(TAG, "SensorChanged: " + TouchedView);
+        //Log.i(TAG, "SensorChanged: " + TouchedView);
+
+        long time = System.currentTimeMillis();
 
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             System.arraycopy(event.values, 0, SensorVal, 0, event.values.length);
@@ -629,9 +706,12 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
         }
 
+        StringBuilder csvRow = CSV.generateCSVRow(SensorVal, TouchedView, pressure, time);
+        rowsToLoad.add(csvRow);
+
         //Call CSV.Write to Insert the sensor's values, the tag of the TouchedView = v.getTag().toString(); element clicked(-1 if nothing clicked) and the path of the file created(check)
         //append Timestamp
-        CSV.Write(SensorVal, TouchedView, printWriter, pressure);
+        //CSV.Write(SensorVal, TouchedView, printWriter, pressure, time);
 
     }
 }
