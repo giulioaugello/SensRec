@@ -16,13 +16,10 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -41,17 +38,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class RecSensor extends AppCompatActivity implements SensorEventListener {
@@ -108,6 +103,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     private String wordDone;
     private SpannableString ssb;
     private BackgroundColorSpan bcsYellow;
+    private boolean notToDelete;
     private String firstCharacter;
 
     @Override
@@ -126,6 +122,8 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         ssb = new SpannableString (textToWrite.getText().toString());
         bcsYellow = new BackgroundColorSpan(Color.YELLOW);
         rowsToLoad = new ArrayList<>();
+        notToDelete = false;
+
     }
 
     private void setSensor() {
@@ -243,62 +241,62 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }
     }
 
-    private void changeFile(File oldfile, String fName, String removeTerm){ //16 campo della lettera
-
-        File path = null;
-        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
-            path = Environment.getExternalStorageDirectory();
-        } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
-            path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-        }
-
-        int position = 16;
-        String tempFile = "temp.csv";
-        File newFile = new File(path + "/" + tempFile);
-
-        String currentLine;
-        String[] data;
-
-        try { //189-221-312
-
-            FileWriter fileWriter = new FileWriter(tempFile, true);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            PrintWriter printWriter1 = new PrintWriter(bufferedWriter);
-
-            String oldFileNameFull = path + "/" + fName;
-            FileReader fileReader = new FileReader(oldFileNameFull);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            while((currentLine = bufferedReader.readLine()) != null){
-
-                data = currentLine.split(",");
-
-                if (!(data[position].equalsIgnoreCase(removeTerm))){
-                    printWriter1.println(currentLine);
-                }
-
-            }
-
-            printWriter1.flush();
-            printWriter1.close();
-            fileReader.close();
-            bufferedReader.close();
-            bufferedWriter.close();
-            fileWriter.close();
-
-            if (oldfile.delete()){
-                Log.i("filefile", "old file delete");
-            }
-            File dump = new File(oldFileNameFull);
-            if (newFile.renameTo(dump)){
-                Log.i("filefile", "new file rename");
-            }
-
-
-        }catch (Exception e){
-            Log.i("filefile", "Catch: " + e.getMessage());
-        }
-    }
+//    private void changeFile(File oldfile, String fName, String removeTerm){ //16 campo della lettera
+//
+//        File path = null;
+//        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
+//            path = Environment.getExternalStorageDirectory();
+//        } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
+//            path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+//        }
+//
+//        int position = 16;
+//        String tempFile = "temp.csv";
+//        File newFile = new File(path + "/" + tempFile);
+//
+//        String currentLine;
+//        String[] data;
+//
+//        try { //189-221-312
+//
+//            FileWriter fileWriter = new FileWriter(tempFile, true);
+//            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+//            PrintWriter printWriter1 = new PrintWriter(bufferedWriter);
+//
+//            String oldFileNameFull = path + "/" + fName;
+//            FileReader fileReader = new FileReader(oldFileNameFull);
+//            BufferedReader bufferedReader = new BufferedReader(fileReader);
+//
+//            while((currentLine = bufferedReader.readLine()) != null){
+//
+//                data = currentLine.split(",");
+//
+//                if (!(data[position].equalsIgnoreCase(removeTerm))){
+//                    printWriter1.println(currentLine);
+//                }
+//
+//            }
+//
+//            printWriter1.flush();
+//            printWriter1.close();
+//            fileReader.close();
+//            bufferedReader.close();
+//            bufferedWriter.close();
+//            fileWriter.close();
+//
+//            if (oldfile.delete()){
+//                Log.i("filefile", "old file delete");
+//            }
+//            File dump = new File(oldFileNameFull);
+//            if (newFile.renameTo(dump)){
+//                Log.i("filefile", "new file rename");
+//            }
+//
+//
+//        }catch (Exception e){
+//            Log.i("filefile", "Catch: " + e.getMessage());
+//        }
+//    }
 
     public void resumeDialog(String title, String message) {
         Log.d("error", "mess");
@@ -377,6 +375,19 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }
         textKeyPressed.getText().clear();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "ONDESTROY");
+        if (!notToDelete && check != null){
+            if (check.delete()){
+                Log.i(TAG, "onDestroy delete");
+            }else{
+                Log.i(TAG, "onDestroy not delete");
+            }
+        }
     }
 
     @Override
@@ -606,8 +617,11 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     public void finishDialog(String s) {
         Log.d("error", "mess");
 
+        countCharacters(); //conto il numero di caratteri premuti
+
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
         miaAlert.setTitle(s);
+        miaAlert.setMessage(getResources().getString(R.string.okback));
 
         miaAlert.setCancelable(false);
         miaAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -615,10 +629,63 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 countDown = false;
                 Files.add(check);
                 closeRoutine();
+                notToDelete = true;
             }
         });
+
         AlertDialog alert = miaAlert.create();
         alert.show();
+    }
+
+    private void countCharacters(){
+
+        HashMap<Character, Integer> charCountMap = new HashMap<>();
+
+        SharedPreferences countersSharedPreferences = getSharedPreferences("counters", MODE_PRIVATE);
+        SharedPreferences.Editor editor = countersSharedPreferences.edit();
+
+        //Converting given string to char array
+        char[] strArray = textToWrite.getText().toString().toCharArray();
+
+        for (char c : strArray)
+        {
+            if(charCountMap.containsKey(c)) {
+
+                //If char 'c' is present in charCountMap, incrementing it's count by 1
+                charCountMap.put(c, charCountMap.get(c)+1);
+
+            } else {
+
+                //If char 'c' is not present in charCountMap,
+                //putting 'c' into charCountMap with 1 as it's value
+                charCountMap.put(c, 1);
+
+            }
+        }
+
+        //push in sharedPreferences
+        for(Map.Entry<Character, Integer> entry : charCountMap.entrySet()) {
+            Character key = entry.getKey();
+            Integer value = entry.getValue();
+
+            int sharedCount;
+            int finalCount;
+
+            if (key == ' '){
+                sharedCount = countersSharedPreferences.getInt("space", 0);
+                finalCount = sharedCount + value;
+                editor.putInt("space", finalCount).apply();
+            }else{
+                sharedCount = countersSharedPreferences.getInt(String.valueOf(key), 0);
+                finalCount = sharedCount + value;
+                editor.putInt(String.valueOf(key), finalCount).apply();
+            }
+
+//            Log.i("charchar", "shared: " + sharedCount + " ... " + String.valueOf(key));
+        }
+
+       Log.i("charchar", textToWrite.getText().toString()+" : "+charCountMap);
+
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

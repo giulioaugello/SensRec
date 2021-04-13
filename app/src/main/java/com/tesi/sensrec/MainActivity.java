@@ -53,7 +53,13 @@ public class MainActivity extends AppCompatActivity {
     private String smartphone, smartphoneShared;
     private int cont = 0;
 
-    public SharedPreferences sharedPreferences;
+    private TextView aCount, bCount, cCount, dCount, eCount, fCount, gCount, hCount, iCount, jCount, kCount, lCount, mCount, nCount, oCount;
+    private TextView pCount, qCount, rCount, sCount, tCount, uCount, vCount, wCount, xCount, yCount, zCount, spaceCount;
+    private Button resetCounters;
+    public static int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, space;
+
+
+    public SharedPreferences sharedPreferences, countersSharedPreferences;
 
    // private int  cont = 0;
     /* Checks if the app has permission to write to device storage
@@ -83,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         go.setEnabled(false);
 
         startService();
+
+        countersSharedPreferences = getSharedPreferences("counters", MODE_PRIVATE);
+
     }
 
     public static void verifyStoragePermissions(Activity activity) {
@@ -258,7 +267,135 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(view);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        initializeTextView(view);
+        inizializeCountersPreferences();
+        setTextCounters();
+
+        resetCounters.setOnClickListener(v -> {
+            resetButtonAlert(view, dialog);
+        });
+
         dialog.show();
+    }
+
+    private void resetButtonAlert(View v, Dialog dialogDismiss) {
+
+        AlertDialog.Builder infoAlert = new AlertDialog.Builder(v.getContext());
+        infoAlert.setTitle(getResources().getString(R.string.attention));
+        infoAlert.setMessage(getResources().getString(R.string.resetOk));
+
+        infoAlert.setCancelable(false);
+
+        infoAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                countersSharedPreferences.edit().clear().apply();
+                dialogDismiss.dismiss();
+            }
+        });
+
+        infoAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog alert = infoAlert.create();
+        alert.show();
+    }
+
+    private void initializeTextView(View view){
+        aCount = view.findViewById(R.id.a_count);
+        bCount = view.findViewById(R.id.b_count);
+        cCount = view.findViewById(R.id.c_count);
+        dCount = view.findViewById(R.id.d_count);
+        eCount = view.findViewById(R.id.e_count);
+        fCount = view.findViewById(R.id.f_count);
+        gCount = view.findViewById(R.id.g_count);
+        hCount = view.findViewById(R.id.h_count);
+        iCount = view.findViewById(R.id.i_count);
+        jCount = view.findViewById(R.id.j_count);
+        kCount = view.findViewById(R.id.k_count);
+        lCount = view.findViewById(R.id.l_count);
+        mCount = view.findViewById(R.id.m_count);
+        nCount = view.findViewById(R.id.n_count);
+        oCount = view.findViewById(R.id.o_count);
+        pCount = view.findViewById(R.id.p_count);
+        qCount = view.findViewById(R.id.q_count);
+        rCount = view.findViewById(R.id.r_count);
+        sCount = view.findViewById(R.id.s_count);
+        tCount = view.findViewById(R.id.t_count);
+        uCount = view.findViewById(R.id.u_count);
+        vCount = view.findViewById(R.id.v_count);
+        wCount = view.findViewById(R.id.w_count);
+        xCount = view.findViewById(R.id.x_count);
+        yCount = view.findViewById(R.id.y_count);
+        zCount = view.findViewById(R.id.z_count);
+        spaceCount = view.findViewById(R.id.space_count);
+
+        resetCounters = view.findViewById(R.id.reset_counters);
+    }
+
+    private void inizializeCountersPreferences(){
+
+        a = countersSharedPreferences.getInt("a", 0);
+        b = countersSharedPreferences.getInt("b", 0);
+        c = countersSharedPreferences.getInt("c", 0);
+        d = countersSharedPreferences.getInt("d", 0);
+        e = countersSharedPreferences.getInt("e", 0);
+        f = countersSharedPreferences.getInt("f", 0);
+        g = countersSharedPreferences.getInt("g", 0);
+        h = countersSharedPreferences.getInt("h", 0);
+        i = countersSharedPreferences.getInt("i", 0);
+        j = countersSharedPreferences.getInt("j", 0);
+        k = countersSharedPreferences.getInt("k", 0);
+        l = countersSharedPreferences.getInt("l", 0);
+        m = countersSharedPreferences.getInt("m", 0);
+        n = countersSharedPreferences.getInt("n", 0);
+        o = countersSharedPreferences.getInt("o", 0);
+        p = countersSharedPreferences.getInt("p", 0);
+        q = countersSharedPreferences.getInt("q", 0);
+        r = countersSharedPreferences.getInt("r", 0);
+        s = countersSharedPreferences.getInt("s", 0);
+        t = countersSharedPreferences.getInt("t", 0);
+        u = countersSharedPreferences.getInt("u", 0);
+        v = countersSharedPreferences.getInt("v", 0);
+        w = countersSharedPreferences.getInt("w", 0);
+        x = countersSharedPreferences.getInt("x", 0);
+        y = countersSharedPreferences.getInt("y", 0);
+        z = countersSharedPreferences.getInt("z", 0);
+        space = countersSharedPreferences.getInt("space", 0);
+    }
+
+    private void setTextCounters(){
+        aCount.setText(String.valueOf(a));
+        bCount.setText(String.valueOf(b));
+        cCount.setText(String.valueOf(c));
+        dCount.setText(String.valueOf(d));
+        eCount.setText(String.valueOf(e));
+        fCount.setText(String.valueOf(f));
+        gCount.setText(String.valueOf(g));
+        hCount.setText(String.valueOf(h));
+        iCount.setText(String.valueOf(i));
+        jCount.setText(String.valueOf(j));
+        kCount.setText(String.valueOf(k));
+        lCount.setText(String.valueOf(l));
+        mCount.setText(String.valueOf(m));
+        nCount.setText(String.valueOf(n));
+        oCount.setText(String.valueOf(o));
+        pCount.setText(String.valueOf(p));
+        qCount.setText(String.valueOf(q));
+        rCount.setText(String.valueOf(r));
+        sCount.setText(String.valueOf(s));
+        tCount.setText(String.valueOf(t));
+        uCount.setText(String.valueOf(u));
+        vCount.setText(String.valueOf(v));
+        wCount.setText(String.valueOf(w));
+        xCount.setText(String.valueOf(x));
+        yCount.setText(String.valueOf(y));
+        zCount.setText(String.valueOf(z));
+        spaceCount.setText(String.valueOf(space));
     }
 
 }

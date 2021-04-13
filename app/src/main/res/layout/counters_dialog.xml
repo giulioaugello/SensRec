@@ -26,7 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Character"
+                    android:text="@string/character"
                     android:layout_marginEnd="5dp"
                     android:textColor="@color/black"
                     android:gravity="center"
@@ -38,7 +38,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Number of touches"
+                    android:text="@string/nOfTouch"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -62,7 +62,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="a"
+                    android:text="@string/a"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -70,10 +70,10 @@
 
 
                 <TextView
+                    android:id="@+id/a_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -95,7 +95,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="b"
+                    android:text="@string/b"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -103,10 +103,10 @@
 
 
                 <TextView
+                    android:id="@+id/b_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -128,7 +128,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="c"
+                    android:text="@string/c"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -136,10 +136,10 @@
 
 
                 <TextView
+                    android:id="@+id/c_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -161,7 +161,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="d"
+                    android:text="@string/d"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -169,10 +169,10 @@
 
 
                 <TextView
+                    android:id="@+id/d_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -194,7 +194,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="e"
+                    android:text="@string/e"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -202,10 +202,10 @@
 
 
                 <TextView
+                    android:id="@+id/e_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -227,7 +227,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="f"
+                    android:text="@string/f"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -235,10 +235,10 @@
 
 
                 <TextView
+                    android:id="@+id/f_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -260,7 +260,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="g"
+                    android:text="@string/g"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -268,10 +268,10 @@
 
 
                 <TextView
+                    android:id="@+id/g_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -293,7 +293,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="h"
+                    android:text="@string/h"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -301,10 +301,10 @@
 
 
                 <TextView
+                    android:id="@+id/h_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -326,7 +326,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="i"
+                    android:text="@string/i"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -334,10 +334,10 @@
 
 
                 <TextView
+                    android:id="@+id/i_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -359,7 +359,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="j"
+                    android:text="@string/j"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -367,10 +367,10 @@
 
 
                 <TextView
+                    android:id="@+id/j_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -392,7 +392,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="k"
+                    android:text="@string/k"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -400,10 +400,10 @@
 
 
                 <TextView
+                    android:id="@+id/k_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -425,7 +425,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="l"
+                    android:text="@string/l"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -433,10 +433,10 @@
 
 
                 <TextView
+                    android:id="@+id/l_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -458,7 +458,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="m"
+                    android:text="@string/m"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -466,10 +466,10 @@
 
 
                 <TextView
+                    android:id="@+id/m_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -491,7 +491,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="n"
+                    android:text="@string/n"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -499,10 +499,10 @@
 
 
                 <TextView
+                    android:id="@+id/n_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -524,7 +524,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="o"
+                    android:text="@string/o"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -532,10 +532,10 @@
 
 
                 <TextView
+                    android:id="@+id/o_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -557,7 +557,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="p"
+                    android:text="@string/p"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -565,10 +565,10 @@
 
 
                 <TextView
+                    android:id="@+id/p_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -590,7 +590,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="q"
+                    android:text="@string/q"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -598,10 +598,10 @@
 
 
                 <TextView
+                    android:id="@+id/q_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -623,7 +623,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="r"
+                    android:text="@string/r"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -631,10 +631,10 @@
 
 
                 <TextView
+                    android:id="@+id/r_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -656,7 +656,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="s"
+                    android:text="@string/s"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -664,10 +664,10 @@
 
 
                 <TextView
+                    android:id="@+id/s_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -689,7 +689,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="t"
+                    android:text="@string/t"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -697,10 +697,10 @@
 
 
                 <TextView
+                    android:id="@+id/t_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -722,7 +722,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="u"
+                    android:text="@string/u"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -730,10 +730,10 @@
 
 
                 <TextView
+                    android:id="@+id/u_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -755,7 +755,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="v"
+                    android:text="@string/v"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -763,10 +763,10 @@
 
 
                 <TextView
+                    android:id="@+id/v_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -788,7 +788,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="w"
+                    android:text="@string/w"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -796,10 +796,10 @@
 
 
                 <TextView
+                    android:id="@+id/w_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -821,7 +821,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="x"
+                    android:text="@string/x"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -829,10 +829,10 @@
 
 
                 <TextView
+                    android:id="@+id/x_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -854,7 +854,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="y"
+                    android:text="@string/y"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -862,10 +862,10 @@
 
 
                 <TextView
+                    android:id="@+id/y_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -887,7 +887,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="z"
+                    android:text="@string/z"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -895,10 +895,10 @@
 
 
                 <TextView
+                    android:id="@+id/z_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -920,7 +920,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="5dp"
                     android:background="@drawable/buttons_dialog"
-                    android:text="space"
+                    android:text="@string/space"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -928,10 +928,10 @@
 
 
                 <TextView
+                    android:id="@+id/space_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="0"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20sp"
@@ -939,7 +939,18 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/reset_counters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:backgroundTint="@color/red"
+                android:text="@string/resetCounters"
+                android:textColor="@color/white"/>
+
         </LinearLayout>
+
 
     </ScrollView>
 
