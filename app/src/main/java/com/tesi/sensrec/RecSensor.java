@@ -105,6 +105,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     private BackgroundColorSpan bcsYellow;
     private boolean notToDelete;
     private String firstCharacter;
+    private ArrayList<View> allButtonsResume;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         bcsYellow = new BackgroundColorSpan(Color.YELLOW);
         rowsToLoad = new ArrayList<>();
         notToDelete = false;
+        allButtonsResume = (findViewById(R.id.keyboard)).getTouchables();
 
     }
 
@@ -300,6 +302,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     public void resumeDialog(String title, String message) {
         Log.d("error", "mess");
+
+//        Log.i("rowsrows", "resumeDialog: " + rowsToLoad);
+
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
         miaAlert.setTitle(title);
         miaAlert.setMessage(message);
@@ -308,6 +313,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         miaAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 pause = false;
+                tempText = testWord;
+                wordDone = "";
+                rowsToLoad.clear();
 
                 if (testWord.length() < 30){
                     timer = 30000;
@@ -318,6 +326,20 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 }
 
                 createCountDown(timer);
+                countWordDone = timer;
+
+                Button retryButton = findViewById(R.id.retry_button);
+                if (retryButton.getVisibility() == View.VISIBLE){
+                    TextView error = findViewById(R.id.textViewWrongKey);
+                    error.setVisibility(View.INVISIBLE);
+                    retryButton.setVisibility(View.GONE);
+
+                    for(View tmp : allButtonsResume){
+                        Button tmpButton = (Button) tmp;
+                        tmpButton.setEnabled(true);
+                    }
+
+                }
 
                 if (check.delete()){
                     Log.i(TAG, "resumeDialog delete");
@@ -333,12 +355,13 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     protected void onResume (){
         super.onResume();
+        Log.i("rowsrows", "onResume: " + rowsToLoad);
         onSensoResume();
+        Log.i("rowsrows", "onResume1: " + rowsToLoad);
         Log.i(TAG, "ONRESUME");
-        if (pause) {
+        if (pause && !notToDelete) {
             resumeDialog("The game has been interrupted","Please press ok to restart it");
         }
-
     }
 
     private void onSensoResume() {
@@ -375,20 +398,29 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }
         textKeyPressed.getText().clear();
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "ONDESTROY");
-        if (!notToDelete && check != null){
+        if (!notToDelete){
             if (check.delete()){
-                Log.i(TAG, "onDestroy delete");
+                Log.i(TAG, "onPause delete");
             }else{
-                Log.i(TAG, "onDestroy not delete");
+                Log.i(TAG, "onPause not delete");
             }
         }
+
     }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        Log.i(TAG, "ONDESTROY");
+//        Log.i(TAG, "bool: " + notToDelete);
+//        if (!notToDelete && check != null){
+//            if (check.delete()){
+//                Log.i(TAG, "onDestroy delete");
+//            }else{
+//                Log.i(TAG, "onDestroy not delete");
+//            }
+//        }
+//    }
 
     @Override
     public void onBackPressed() {
@@ -422,12 +454,14 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                     });
 
         }
-        finish();
     }
 
     public void failDialog (String s) {
         Log.d("error", "mess");
+
         mSensorManager.unregisterListener(this);
+        notToDelete = true;
+
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
         miaAlert.setTitle(s);
         countDownTimer.cancel();
@@ -457,7 +491,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         TextView time = findViewById(R.id.text_view_countdown);
         time.setText(timeLeftFormatted);
 
-        Log.d("Timer", String.valueOf(timer));
+//        Log.d("Timer", String.valueOf(timer));
     }
 
     public View.OnTouchListener handleTouch = new View.OnTouchListener() {
@@ -476,7 +510,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 checkString(v);
 
                 TouchedView = "-1"; //setto a -1 quando alzo il dito
-                Log.d("TAG", TouchedView);
+//                Log.d("TAG", TouchedView);
             }
             return true;
         }
@@ -547,6 +581,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             } else if (textKeyPressed.getText().toString().endsWith(" ")){
 
+                Log.i("rowsrows", "checkString: " + rowsToLoad);
                 //scrive tutte le righe che contiene l'array nel file e le cancella dopo averle scritte
                 for (StringBuilder stringBuilder: rowsToLoad){
                     printWriter.print(stringBuilder);
@@ -619,6 +654,11 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
         countCharacters(); //conto il numero di caratteri premuti
 
+        countDown = false;
+        Files.add(check);
+        closeRoutine();
+        notToDelete = true;
+
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
         miaAlert.setTitle(s);
         miaAlert.setMessage(getResources().getString(R.string.okback));
@@ -626,10 +666,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         miaAlert.setCancelable(false);
         miaAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                countDown = false;
-                Files.add(check);
-                closeRoutine();
-                notToDelete = true;
+                finish();
             }
         });
 
