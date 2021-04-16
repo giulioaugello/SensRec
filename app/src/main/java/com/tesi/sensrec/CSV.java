@@ -36,11 +36,10 @@ public class CSV {
 
     }
 
-
-//    public static void Write(float[] args, String view, PrintWriter printWriter, float pressure, long time){
+//    public static void Write(float[] args, String view, PrintWriter printWriter, float pressure){
 //
 //        StringBuilder var = new StringBuilder();
-//        var.append(time);
+//        var.append(System.currentTimeMillis());
 //        var.append(",");
 //        //printWriter.print(System.currentTimeMillis());
 //

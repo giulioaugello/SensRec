@@ -10,6 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
@@ -204,7 +205,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }else if (testWord.length() >= 40){
             timer = 50000;
         }
-        //Log.i("wordword", "NOOOOOOO");
         createCountDown(timer);
 
     }
@@ -355,12 +355,12 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     protected void onResume (){
         super.onResume();
-        Log.i("rowsrows", "onResume: " + rowsToLoad);
+//        Log.i("rowsrows", "onResume: " + rowsToLoad);
         onSensoResume();
-        Log.i("rowsrows", "onResume1: " + rowsToLoad);
+//        Log.i("rowsrows", "onResume1: " + rowsToLoad);
         Log.i(TAG, "ONRESUME");
         if (pause && !notToDelete) {
-            resumeDialog("The game has been interrupted","Please press ok to restart it");
+            resumeDialog("The game has been interrupted","Please press ok to restart it. Wait few second before write again.");
         }
     }
 
@@ -381,14 +381,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         mSensorManager.unregisterListener(this);
         countDown = false;
         printWriter.close();
-
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
-//            if (check.delete()){
-//                Log.i(TAG, "onPause cancellato");
-//            }else{
-//                Log.i(TAG, "onPause non cancellato");
-//            }
-//        }
 
         TextView cDTextView = findViewById(R.id.text_view_countdown);
         cDTextView.setVisibility(View.INVISIBLE);
@@ -462,6 +454,14 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         mSensorManager.unregisterListener(this);
         notToDelete = true;
 
+        printWriter.close();
+        countDown = false;
+        if (check.delete()){
+            Log.i(TAG, "failDialog delete");
+        }else{
+            Log.i(TAG, "failDialog not delete");
+        }
+
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
         miaAlert.setTitle(s);
         countDownTimer.cancel();
@@ -469,13 +469,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         miaAlert.setCancelable(false);
         miaAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                printWriter.close();
-                countDown = false;
-                if (check.delete()){
-                    Log.i(TAG, "failDialog delete");
-                }else{
-                    Log.i(TAG, "failDialog not delete");
-                }
+
                 finish();
             }
         });
@@ -581,7 +575,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             } else if (textKeyPressed.getText().toString().endsWith(" ")){
 
-                Log.i("rowsrows", "checkString: " + rowsToLoad);
+//                Log.i("rowsrows", "checkString: " + rowsToLoad);
                 //scrive tutte le righe che contiene l'array nel file e le cancella dopo averle scritte
                 for (StringBuilder stringBuilder: rowsToLoad){
                     printWriter.print(stringBuilder);
@@ -689,7 +683,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             if(charCountMap.containsKey(c)) {
 
                 //If char 'c' is present in charCountMap, incrementing it's count by 1
-                charCountMap.put(c, charCountMap.get(c)+1);
+                charCountMap.put(c, charCountMap.get(c) + 1);
 
             } else {
 
