@@ -40,7 +40,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Scanner;
 
 
 public class RecSensor extends AppCompatActivity implements SensorEventListener {
@@ -126,6 +129,8 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         rowsToLoad = new ArrayList<>();
         notToDelete = false;
         allButtonsResume = (findViewById(R.id.keyboard)).getTouchables();
+
+//        countCharacters();
 
     }
 
@@ -242,63 +247,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             Log.i(TAG, "CATCH: " + e.getMessage());
         }
     }
-
-//    private void changeFile(File oldfile, String fName, String removeTerm){ //16 campo della lettera
-//
-//        File path = null;
-//        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
-//            path = Environment.getExternalStorageDirectory();
-//        } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
-//            path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-//        }
-//
-//        int position = 16;
-//        String tempFile = "temp.csv";
-//        File newFile = new File(path + "/" + tempFile);
-//
-//        String currentLine;
-//        String[] data;
-//
-//        try { //189-221-312
-//
-//            FileWriter fileWriter = new FileWriter(tempFile, true);
-//            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-//            PrintWriter printWriter1 = new PrintWriter(bufferedWriter);
-//
-//            String oldFileNameFull = path + "/" + fName;
-//            FileReader fileReader = new FileReader(oldFileNameFull);
-//            BufferedReader bufferedReader = new BufferedReader(fileReader);
-//
-//            while((currentLine = bufferedReader.readLine()) != null){
-//
-//                data = currentLine.split(",");
-//
-//                if (!(data[position].equalsIgnoreCase(removeTerm))){
-//                    printWriter1.println(currentLine);
-//                }
-//
-//            }
-//
-//            printWriter1.flush();
-//            printWriter1.close();
-//            fileReader.close();
-//            bufferedReader.close();
-//            bufferedWriter.close();
-//            fileWriter.close();
-//
-//            if (oldfile.delete()){
-//                Log.i("filefile", "old file delete");
-//            }
-//            File dump = new File(oldFileNameFull);
-//            if (newFile.renameTo(dump)){
-//                Log.i("filefile", "new file rename");
-//            }
-//
-//
-//        }catch (Exception e){
-//            Log.i("filefile", "Catch: " + e.getMessage());
-//        }
-//    }
 
     public void resumeDialog(String title, String message) {
         Log.d("error", "mess");
@@ -429,23 +377,39 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     private void closeRoutine() {
         mSensorManager.unregisterListener(this);
         printWriter.close();
-        for(final File elem : Files){
-            Uri file = Uri.fromFile(elem);
-            StorageReference riversRef = storageRef.child("rawCsv/" + file.getLastPathSegment());
-            riversRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    elem.delete();
-                }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(RecSensor.this, "Failed " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
 
+        //controllo se l'ultima riga contiene una lettera, se non la contiene cancello il file
+        if (checkLastCharacter()){
+
+            countCharacters(); //conto il numero di caratteri nella frase
+
+            for(final File elem : Files){
+                Uri file = Uri.fromFile(elem);
+                StorageReference riversRef = storageRef.child("rawCsv/" + file.getLastPathSegment());
+                riversRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        elem.delete();
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(RecSensor.this, "Failed " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+            }
+
+        }else {
+            if (check.delete()){
+                Log.i(TAG, "checkLastCharacter delete");
+            }else{
+                Log.i(TAG, "checkLastCharacter not delete");
+            }
         }
+
+
     }
 
     public void failDialog (String s) {
@@ -567,7 +531,9 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 //scrivo l'ultima parola e svuota array
                 for (StringBuilder stringBuilder: rowsToLoad){
                     printWriter.print(stringBuilder);
+//                    Log.i("charchar", "3 " + stringBuilder);
                 }
+//                Log.i("charchar", "1 " + rowsToLoad);
                 rowsToLoad.clear();
 
                 countDownTimer.cancel();
@@ -646,7 +612,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     public void finishDialog(String s) {
         Log.d("error", "mess");
 
-        countCharacters(); //conto il numero di caratteri premuti
+
 
         countDown = false;
         Files.add(check);
@@ -668,6 +634,108 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         alert.show();
     }
 
+    private boolean checkLastCharacter() {
+
+        boolean isCharacter = false;
+
+        File path = null;
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
+            path = Environment.getExternalStorageDirectory();
+        } else {
+            path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        }
+
+        try {
+
+            BufferedReader input = new BufferedReader(new FileReader(path + "/" + filename));
+
+            String line;
+            String lastLine = "";
+
+            while ((line = input.readLine()) != null) {
+                lastLine = line; //salvo l'ultima riga del file
+            }
+
+            String[] data = lastLine.split(",");
+            Log.i("charchar", "lastLine: " + lastLine);
+            Log.i("charchar", "data: " + Arrays.toString(data) + " ... " + data[16]);
+
+            if (data[16].equals("-1")){ //se il 16esimo valore non è una lettera
+
+                isCharacter = false;
+                Log.i("charchar", "-1 as last");
+
+            }else {
+
+                isCharacter = true;
+                Log.i("charchar", "all sentence write");
+
+            }
+        }catch (IOException e){
+            Log.i(TAG, "catch checkLastCharacter: " + e.getMessage());
+        }
+
+        return isCharacter;
+
+    }
+
+    //    private void changeFile(File oldfile, String fName, String removeTerm){ //16 campo della lettera
+//
+//        File path = null;
+//        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
+//            path = Environment.getExternalStorageDirectory();
+//        } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
+//            path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+//        }
+//
+//        int position = 16;
+//        String tempFile = "temp.csv";
+//        File newFile = new File(path + "/" + tempFile);
+//
+//        String currentLine;
+//        String[] data;
+//
+//        try { //189-221-312
+//
+//            FileWriter fileWriter = new FileWriter(tempFile, true);
+//            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+//            PrintWriter printWriter1 = new PrintWriter(bufferedWriter);
+//
+//            String oldFileNameFull = path + "/" + fName;
+//            FileReader fileReader = new FileReader(oldFileNameFull);
+//            BufferedReader bufferedReader = new BufferedReader(fileReader);
+//
+//            while((currentLine = bufferedReader.readLine()) != null){
+//
+//                data = currentLine.split(",");
+//
+//                if (!(data[position].equalsIgnoreCase(removeTerm))){
+//                    printWriter1.println(currentLine);
+//                }
+//
+//            }
+//
+//            printWriter1.flush();
+//            printWriter1.close();
+//            fileReader.close();
+//            bufferedReader.close();
+//            bufferedWriter.close();
+//            fileWriter.close();
+//
+//            if (oldfile.delete()){
+//                Log.i("filefile", "old file delete");
+//            }
+//            File dump = new File(oldFileNameFull);
+//            if (newFile.renameTo(dump)){
+//                Log.i("filefile", "new file rename");
+//            }
+//
+//
+//        }catch (Exception e){
+//            Log.i("filefile", "Catch: " + e.getMessage());
+//        }
+//    }
+
     private void countCharacters(){
 
         HashMap<Character, Integer> charCountMap = new HashMap<>();
@@ -677,6 +745,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
         //Converting given string to char array
         char[] strArray = textToWrite.getText().toString().toCharArray();
+//        Log.i("charchar", " : " + Arrays.toString(strArray));
 
         for (char c : strArray)
         {
@@ -715,7 +784,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 //            Log.i("charchar", "shared: " + sharedCount + " ... " + String.valueOf(key));
         }
 
-       Log.i("charchar", textToWrite.getText().toString()+" : "+charCountMap);
+       Log.i("charchar", textToWrite.getText().toString() + " : " + charCountMap);
 
     }
 
