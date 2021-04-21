@@ -35,6 +35,8 @@ import androidx.core.content.ContextCompat;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import static android.view.View.VISIBLE;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private BufferedReader br;
     private String User;
     private String Hand;
-    private String smartphone, smartphoneShared, userShared;
+    private String smartphone;
     private int cont = 0;
 
     private TextView aCount, bCount, cCount, dCount, eCount, fCount, gCount, hCount, iCount, jCount, kCount, lCount, mCount, nCount, oCount;
@@ -73,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
-        userShared = sharedPreferences.getString("userName", null);
-        smartphoneShared = sharedPreferences.getString("smartphoneName", null);
+        String userShared = sharedPreferences.getString("userName", null);
+        String smartphoneShared = sharedPreferences.getString("smartphoneName", null);
 
         EditText editSmartphone = findViewById(R.id.editTextSmartph);
         if (smartphoneShared != null){
@@ -165,15 +167,21 @@ public class MainActivity extends AppCompatActivity {
         User = editTextUsername.getText().toString().trim();
         smartphone = editTextSmartphone.getText().toString().trim();
 
+        Pattern p = Pattern.compile("[^a-zA-Z0-9\\s]"); //indica cosa posso inserire negli editText (\\s = spazio)
+        Matcher matcherUser = p.matcher(User);
+        Matcher matcherSmartphone = p.matcher(smartphone);
+        boolean booleanMatcherUser = matcherUser.find();
+        boolean booleanMatcherSmartphone = matcherSmartphone.find();
+
         if (User.isEmpty() || smartphone.isEmpty()) {
 
             Toast.makeText(this, getResources().getString(R.string.Error), Toast.LENGTH_LONG).show();
 
-        } else if (smartphone.contains("-") || smartphone.contains(".") || User.contains("-") || User.contains(".")){
+        } else if (booleanMatcherUser || booleanMatcherSmartphone){
 
             Toast.makeText(this, getResources().getString(R.string.noSpecial), Toast.LENGTH_LONG).show();
 
-        }else if (userSh != null && !userSh.equals(User)){
+        } else if (userSh != null && !userSh.equals(User)){
 
             changeUserDialog(view);
 
@@ -181,10 +189,14 @@ public class MainActivity extends AppCompatActivity {
 
             editor.putString("userName", User).apply();
             editor.putString("smartphoneName", smartphone).apply();
-//            Log.i("smartsmart", smartphone);
             infodialog(view);
         }
 
+//        else if (smartphone.contains("-") || smartphone.contains(".") || User.contains("-") || User.contains(".")){
+//
+//            Toast.makeText(this, getResources().getString(R.string.noSpecial), Toast.LENGTH_LONG).show();
+//
+//        }
 
     }
 
@@ -201,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 countersSharedPreferences.edit().clear().apply();
                 editor.putString("userName", User).apply();
-                Log.i("smartsmart", User);
             }
 
         });
@@ -249,7 +260,6 @@ public class MainActivity extends AppCompatActivity {
                 data.putExtra("User", User);
                 data.putExtra("words", line);
                 data.putExtra("hand", Hand);
-                //data.putExtra("smartphone", smartphoneShared);
                 stopService();
                 startActivity(data);
             }

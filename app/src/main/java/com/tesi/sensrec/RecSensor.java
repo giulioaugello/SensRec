@@ -248,14 +248,12 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }
     }
 
-    public void resumeDialog(String title, String message) {
+    public void resumeDialog() {
         Log.d("error", "mess");
 
-//        Log.i("rowsrows", "resumeDialog: " + rowsToLoad);
-
         AlertDialog.Builder miaAlert = new AlertDialog.Builder(this);
-        miaAlert.setTitle(title);
-        miaAlert.setMessage(message);
+        miaAlert.setTitle(getResources().getString(R.string.interrupted));
+        miaAlert.setMessage(getResources().getString(R.string.restart));
 
         miaAlert.setCancelable(false);
         miaAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -303,12 +301,12 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     protected void onResume (){
         super.onResume();
-//        Log.i("rowsrows", "onResume: " + rowsToLoad);
-        onSensoResume();
-//        Log.i("rowsrows", "onResume1: " + rowsToLoad);
         Log.i(TAG, "ONRESUME");
+
+        onSensoResume();
+
         if (pause && !notToDelete) {
-            resumeDialog("The game has been interrupted","Please press ok to restart it. Wait few second before write again.");
+            resumeDialog();
         }
     }
 
@@ -347,20 +345,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }
 
     }
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        Log.i(TAG, "ONDESTROY");
-//        Log.i(TAG, "bool: " + notToDelete);
-//        if (!notToDelete && check != null){
-//            if (check.delete()){
-//                Log.i(TAG, "onDestroy delete");
-//            }else{
-//                Log.i(TAG, "onDestroy not delete");
-//            }
-//        }
-//    }
 
     @Override
     public void onBackPressed() {
@@ -531,9 +515,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 //scrivo l'ultima parola e svuota array
                 for (StringBuilder stringBuilder: rowsToLoad){
                     printWriter.print(stringBuilder);
-//                    Log.i("charchar", "3 " + stringBuilder);
                 }
-//                Log.i("charchar", "1 " + rowsToLoad);
                 rowsToLoad.clear();
 
                 countDownTimer.cancel();
@@ -541,7 +523,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             } else if (textKeyPressed.getText().toString().endsWith(" ")){
 
-//                Log.i("rowsrows", "checkString: " + rowsToLoad);
                 //scrive tutte le righe che contiene l'array nel file e le cancella dopo averle scritte
                 for (StringBuilder stringBuilder: rowsToLoad){
                     printWriter.print(stringBuilder);
@@ -549,16 +530,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 rowsToLoad.clear();
             }
         }
-//        else if (textToWrite.getText().toString().equals(textKeyPressed.getText().toString())) {
-//
-//            countDownTimer.cancel();
-//            finishDialog("Game Over");
-//
-//        }else if (textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
-//
-//            textKeyPressed.addTextChangedListener(mTextEditorWatcher);
-//
-//        }
+
     }
 
     private final TextWatcher mTextEditorWatcher = new TextWatcher() {
@@ -678,63 +650,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         return isCharacter;
 
     }
-
-    //    private void changeFile(File oldfile, String fName, String removeTerm){ //16 campo della lettera
-//
-//        File path = null;
-//        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q){
-//            path = Environment.getExternalStorageDirectory();
-//        } else if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.Q){
-//            path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-//        }
-//
-//        int position = 16;
-//        String tempFile = "temp.csv";
-//        File newFile = new File(path + "/" + tempFile);
-//
-//        String currentLine;
-//        String[] data;
-//
-//        try { //189-221-312
-//
-//            FileWriter fileWriter = new FileWriter(tempFile, true);
-//            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-//            PrintWriter printWriter1 = new PrintWriter(bufferedWriter);
-//
-//            String oldFileNameFull = path + "/" + fName;
-//            FileReader fileReader = new FileReader(oldFileNameFull);
-//            BufferedReader bufferedReader = new BufferedReader(fileReader);
-//
-//            while((currentLine = bufferedReader.readLine()) != null){
-//
-//                data = currentLine.split(",");
-//
-//                if (!(data[position].equalsIgnoreCase(removeTerm))){
-//                    printWriter1.println(currentLine);
-//                }
-//
-//            }
-//
-//            printWriter1.flush();
-//            printWriter1.close();
-//            fileReader.close();
-//            bufferedReader.close();
-//            bufferedWriter.close();
-//            fileWriter.close();
-//
-//            if (oldfile.delete()){
-//                Log.i("filefile", "old file delete");
-//            }
-//            File dump = new File(oldFileNameFull);
-//            if (newFile.renameTo(dump)){
-//                Log.i("filefile", "new file rename");
-//            }
-//
-//
-//        }catch (Exception e){
-//            Log.i("filefile", "Catch: " + e.getMessage());
-//        }
-//    }
 
     private void countCharacters(){
 

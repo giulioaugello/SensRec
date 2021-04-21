@@ -24,7 +24,9 @@
     <string name="attention">Attention!</string>
     <string name="resetOk">Pressing OK will set all counters to 0. Are you sure to continue?</string>
     <string name="okback">Press OK to go back</string>
-    <string name="changeUser">You are changing Username, the previous Username is %1$s. By pressing OK new Username will be saved and each counter will be reset. Press Cancel to set old Username.</string>
+    <string name="changeUser">You are changing Username, the previous Username is %1$s. By pressing OK new Username will be saved and each counter will be reset. Press CANCEL to set old Username.</string>
+    <string name="interrupted">The game has been interrupted</string>
+    <string name="restart">Please press OK to restart it. Wait few seconds before writing again</string>
 
     <string name="a">a</string>
     <string name="b">b</string>
