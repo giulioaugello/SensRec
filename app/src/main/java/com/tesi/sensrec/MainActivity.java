@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private BufferedReader br;
     private String User;
     private String Hand;
-    private String smartphone, smartphoneShared;
+    private String smartphone, smartphoneShared, userShared;
     private int cont = 0;
 
     private TextView aCount, bCount, cCount, dCount, eCount, fCount, gCount, hCount, iCount, jCount, kCount, lCount, mCount, nCount, oCount;
@@ -73,15 +73,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
+        userShared = sharedPreferences.getString("userName", null);
         smartphoneShared = sharedPreferences.getString("smartphoneName", null);
 
         EditText editSmartphone = findViewById(R.id.editTextSmartph);
-
         if (smartphoneShared != null){
             editSmartphone.setText(smartphoneShared);
         }
 
-        Log.i("smartsmart", "onCreate " + smartphoneShared);
+        EditText editUs = findViewById(R.id.editTextUsername);
+        if (userShared != null){
+            editUs.setText(userShared);
+        }
 
         verifyStoragePermissions(this);
 
@@ -132,44 +135,88 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         RadioGroup rg = findViewById(R.id.hand);
         rg.clearCheck();
+
         EditText us = findViewById(R.id.editTextUsername);
-        us.setText("");
+        String sharedU = sharedPreferences.getString("userName", null);
+        if (sharedU != null){
+            us.setText(sharedU);
+        }
+
         EditText editSmartphone = findViewById(R.id.editTextSmartph);
         String shared = sharedPreferences.getString("smartphoneName", null);
         if (shared != null){
             editSmartphone.setText(shared);
         }
-        Log.i("smartsmart", "onResume " + smartphoneShared + " " + shared);
-//        editSmartphone.setText("");
-//        TextView error = findViewById(R.id.errorMessage);
-//        error.setVisibility(View.INVISIBLE);
+
+        Log.i("smartsmart", "onResume " + sharedU + " " + shared);
+
         Button go = findViewById(R.id.playButton);
         go.setEnabled(false);
     }
 
     public void StartRec(View view) {
 
-        //TextView error = findViewById(R.id.errorMessage);
         EditText editTextUsername = findViewById(R.id.editTextUsername);
         EditText editTextSmartphone = findViewById(R.id.editTextSmartph);
 
+        String userSh = sharedPreferences.getString("userName", null);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        User = editTextUsername.getText().toString();
-        smartphone = editTextSmartphone.getText().toString();
+        User = editTextUsername.getText().toString().trim();
+        smartphone = editTextSmartphone.getText().toString().trim();
 
         if (User.isEmpty() || smartphone.isEmpty()) {
+
             Toast.makeText(this, getResources().getString(R.string.Error), Toast.LENGTH_LONG).show();
-            //error.setVisibility(View.VISIBLE);
+
         } else if (smartphone.contains("-") || smartphone.contains(".") || User.contains("-") || User.contains(".")){
+
             Toast.makeText(this, getResources().getString(R.string.noSpecial), Toast.LENGTH_LONG).show();
-        }else {
+
+        }else if (userSh != null && !userSh.equals(User)){
+
+            changeUserDialog(view);
+
+        } else {
+
+            editor.putString("userName", User).apply();
             editor.putString("smartphoneName", smartphone).apply();
-            Log.i("smartsmart", smartphone);
+//            Log.i("smartsmart", smartphone);
             infodialog(view);
         }
 
 
+    }
+
+    private void changeUserDialog(View view) {
+        String userSh = sharedPreferences.getString("userName", null);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        AlertDialog.Builder infoAlert = new AlertDialog.Builder(view.getContext());
+        infoAlert.setTitle(getResources().getString(R.string.attention));
+        infoAlert.setMessage(getResources().getString(R.string.changeUser, userSh));
+
+        infoAlert.setCancelable(false);
+        infoAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                countersSharedPreferences.edit().clear().apply();
+                editor.putString("userName", User).apply();
+                Log.i("smartsmart", User);
+            }
+
+        });
+
+        infoAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText editTextUsername = findViewById(R.id.editTextUsername);
+                editTextUsername.setText(userSh);
+            }
+        });
+
+
+        AlertDialog alert = infoAlert.create();
+        alert.show();
     }
 
     public void hand (View view) {
@@ -191,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("error", "mess");
 
         AlertDialog.Builder infoAlert = new AlertDialog.Builder(v.getContext());
-        infoAlert.setTitle("Instructions");
+        infoAlert.setTitle(getResources().getString(R.string.instructions));
         infoAlert.setMessage(R.string.alertDialogMessage);
 
 

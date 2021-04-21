@@ -143,7 +143,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     }
 
     private void setData() {
-        User = getIntent().getStringExtra("User");
+        User = getIntent().getStringExtra("User").trim();
         testWord = getIntent().getStringExtra("words");
         Hand = getIntent().getStringExtra("hand");
     }
@@ -208,7 +208,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }else if (testWord.length() < 40){
             timer = 40000;
         }else if (testWord.length() >= 40){
-            timer = 50000;
+            timer = 60000;
         }
         createCountDown(timer);
 
@@ -227,7 +227,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
             smartphone = sharedPreferences.getString("smartphoneName", null);
-            String upperSmartphone = smartphone.toUpperCase();
+            String upperSmartphone = smartphone.toUpperCase().trim();
 
             filename = User +  "-" + upperSmartphone +  "-" + Hand + "-" + time + "-" + testWord + ".csv";
             Log.d(TAG, "onCreate: " + filename);
@@ -270,7 +270,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 }else if (testWord.length() < 40){
                     timer = 40000;
                 }else if (testWord.length() >= 40){
-                    timer = 50000;
+                    timer = 60000;
                 }
 
                 createCountDown(timer);
