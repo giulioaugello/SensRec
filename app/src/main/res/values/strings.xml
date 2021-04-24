@@ -7,7 +7,8 @@
     <string name="instructions">Instructions</string>
     <string name="play">Play</string>
     <string name="alertDialogMessage">Press OK to start playing or CANCEL to go back!</string>
-    <string name="wrongKey">You type the wrong key, take your time! Press the green button to resume the game</string>
+    <string name="wrongKey">You pressed the wrong key, take your time! Press the green button to resume the game</string>
+    <string name="notUploadKey">Some characters have not been registered, take your time! Press the green button to resume the game</string>
     <string name="resume">Resume</string>
     <string name="word">Insert word</string>
     <string name="LogUser">Insert Username</string>

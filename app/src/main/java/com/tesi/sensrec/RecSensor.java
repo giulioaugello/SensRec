@@ -130,8 +130,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         notToDelete = false;
         allButtonsResume = (findViewById(R.id.keyboard)).getTouchables();
 
-//        countCharacters();
-
     }
 
     private void setSensor() {
@@ -347,6 +345,20 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "ONDESTROY");
+
+        if (!notToDelete) {
+            if (check.delete()) {
+                Log.i(TAG, "onDestroy delete");
+            } else {
+                Log.i(TAG, "onDestroy not delete");
+            }
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         //go back without finishing writing, it deletes the file
@@ -463,74 +475,146 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
         if (!textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())) {
 
-            TextView error = findViewById(R.id.textViewWrongKey);
-            error.setVisibility(View.VISIBLE);
-
-            Button retryButton = findViewById(R.id.retry_button);
-            retryButton.setVisibility(View.VISIBLE);
-
-            textKeyPressed.setText(wordDone); //setto la parola precedente
-
-            mSensorManager.unregisterListener(this); //stoppo i sensori
-
-            //aggiorno il timer
-            countDownTimer.cancel();
-            createCountDown(countWordDone);
-            TextView cDTextView = findViewById(R.id.text_view_countdown);
-            cDTextView.setVisibility(View.VISIBLE);
-            updateCountDownText();
-
-            rowsToLoad.clear(); //cancello elementi in array (perchè contiene righe sbagliate)
-
-            //disattivo la tastiera
-            ArrayList<View> allButtons;
-            allButtons = (findViewById(R.id.keyboard)).getTouchables();
-            for(View tmp : allButtons){
-                Button tmpButton = (Button) tmp;
-                tmpButton.setEnabled(false);
-            }
-
-            retryButton.setOnClickListener(v1 -> {
-
-                //riattivo sensori e tastiera
-                onSensoResume();
-                countDownTimer.start();
-
-                error.setVisibility(View.INVISIBLE);
-                retryButton.setVisibility(View.GONE);
-
-                for(View tmp : allButtons){
-                    Button tmpButton = (Button) tmp;
-                    tmpButton.setEnabled(true);
-                }
-
-            });
+            String text = getResources().getString(R.string.wrongKey);
+            pauseAll(text);
 
         } else {
 
             textKeyPressed.addTextChangedListener(mTextEditorWatcher); //aggiunge il lister per background del textToWrite
 
+            String text = getResources().getString(R.string.notUploadKey);
+
             if (textToWrite.getText().toString().equals(textKeyPressed.getText().toString())) {
 
-                //scrivo l'ultima parola e svuota array
-                for (StringBuilder stringBuilder: rowsToLoad){
-                    printWriter.print(stringBuilder);
-                }
-                rowsToLoad.clear();
+                //se ci sono tutti i caratteri da aggiungere
+                if (checkAllCharacter(true)) {
 
-                countDownTimer.cancel();
-                finishDialog("Game Over");
+                    //scrivo l'ultima parola e svuota array
+                    uploadCorrectWord();
+
+                    countDownTimer.cancel();
+                    finishDialog("Game Over");
+
+                }else {
+
+                    pauseAll(text);
+
+                }
+
 
             } else if (textKeyPressed.getText().toString().endsWith(" ")){
 
-                //scrive tutte le righe che contiene l'array nel file e le cancella dopo averle scritte
-                for (StringBuilder stringBuilder: rowsToLoad){
-                    printWriter.print(stringBuilder);
+                //se ci sono tutti i caratteri da aggiungere
+                if (checkAllCharacter(false)){
+
+                    //scrive tutte le righe che contiene l'array nel file e le cancella dopo averle scritte
+                    uploadCorrectWord();
+
+                }else {
+
+                    pauseAll(text);
+
                 }
-                rowsToLoad.clear();
+
             }
         }
 
+    }
+
+    private void uploadCorrectWord(){
+        for (StringBuilder stringBuilder: rowsToLoad){
+            printWriter.print(stringBuilder);
+        }
+        rowsToLoad.clear();
+    }
+
+    private void pauseAll(String textError){
+        TextView error = findViewById(R.id.textViewWrongKey);
+        error.setText(textError);
+        error.setVisibility(View.VISIBLE);
+
+        Button retryButton = findViewById(R.id.retry_button);
+        retryButton.setVisibility(View.VISIBLE);
+
+        textKeyPressed.setText(wordDone); //setto la parola precedente
+
+        mSensorManager.unregisterListener(this); //stoppo i sensori
+
+        //aggiorno il timer
+        countDownTimer.cancel();
+        createCountDown(countWordDone);
+        TextView cDTextView = findViewById(R.id.text_view_countdown);
+        cDTextView.setVisibility(View.VISIBLE);
+        updateCountDownText();
+
+        rowsToLoad.clear(); //cancello elementi in array (perchè contiene righe sbagliate)
+
+        //disattivo la tastiera
+        ArrayList<View> allButtons;
+        allButtons = (findViewById(R.id.keyboard)).getTouchables();
+        for(View tmp : allButtons){
+            Button tmpButton = (Button) tmp;
+            tmpButton.setEnabled(false);
+        }
+
+        retryButton.setOnClickListener(v1 -> {
+
+            //riattivo sensori e tastiera
+            onSensoResume();
+            countDownTimer.start();
+
+            error.setVisibility(View.INVISIBLE);
+            retryButton.setVisibility(View.GONE);
+
+            for(View tmp : allButtons){
+                Button tmpButton = (Button) tmp;
+                tmpButton.setEnabled(true);
+            }
+
+        });
+    }
+
+    private boolean checkAllCharacter(boolean isLastWord){
+
+        String word = arrOfStr[0] + " "; //ultima parola scritta + spazio
+        if (isLastWord){
+            word = arrOfStr[1]; //se è l'ultima parola prendo arrOfStr[1]
+        }
+
+        char[] strArray = word.toCharArray(); //scompongo la parola
+
+        for (StringBuilder stringBuilder: rowsToLoad){
+
+            if (strArray.length != 0) {
+
+                String[] data = stringBuilder.toString().split(",");
+
+                if (!data[16].equals("-1")) {
+
+                    char character = data[16].charAt(0); //prende la lettera della riga
+
+                    //se le lettere sono uguali rimuovo dall'array le lettere
+                    if (character == strArray[0]) {
+                        strArray = Arrays.copyOfRange(strArray, 1, strArray.length);
+                    }
+
+                }
+
+            }else {
+                break;
+            }
+        }
+
+        boolean arrayIsEmpty = strArray.length == 0;
+
+        //se l'array è vuoto aggiorno i valori delle variabili
+        if (arrayIsEmpty){
+            wordDone = wordDone + arrOfStr[0] + " "; //frase precedente all'errore (viene impostata in checkString())
+            tempText = arrOfStr[1]; //frase che devo ancora scrivere
+            countWordDone = timer; //salvo il timer quando premo spazio per reinserirlo se sbaglio
+        }
+
+        return arrayIsEmpty;
     }
 
     private final TextWatcher mTextEditorWatcher = new TextWatcher() {
@@ -555,17 +639,15 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         TouchedView = v.getTag().toString(); //quando premo imposta touchedView con l'ultimo tasto premuto (o -1 se non premo nulla)
         undo = textKeyPressed.getText().toString(); //è la frase scritta prima di premere un nuovo tasto
         textKeyPressed.append(TouchedView);
-//        Log.i("wordword", TouchedView + " ... " + undo);
-//        firstCharacter = tempText.substring(0, 1);
 
         //quando premo spazio e ho effettivamente uno spazio da premere
         if(TouchedView.equals(" ") && textToWrite.getText().toString().startsWith(textKeyPressed.getText().toString())){
 
             arrOfStr = tempText.split(" ", 2); //divide in 2 tempText (separa prima parola con il resto)
-            wordDone = wordDone + arrOfStr[0] + " "; //frase precedente all'errore (viene impostata in checkString())
-            tempText = arrOfStr[1]; //frase che devo ancora scrivere
+//            wordDone = wordDone + arrOfStr[0] + " "; //frase precedente all'errore (viene impostata in checkString())
+//            tempText = arrOfStr[1]; //frase che devo ancora scrivere
 
-            countWordDone = timer; //salvo il timer quando premo spazio per reinserirlo se sbaglio
+//            countWordDone = timer; //salvo il timer quando premo spazio per reinserirlo se sbaglio
 
             Log.i("wordword", Arrays.toString(arrOfStr) + " AAA " + tempText + " AAA " + wordDone + " AAA " + arrOfStr[0]);
 
@@ -583,8 +665,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     public void finishDialog(String s) {
         Log.d("error", "mess");
-
-
 
         countDown = false;
         Files.add(check);
@@ -660,7 +740,6 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
         //Converting given string to char array
         char[] strArray = textToWrite.getText().toString().toCharArray();
-//        Log.i("charchar", " : " + Arrays.toString(strArray));
 
         for (char c : strArray)
         {
