@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
 
             br = new BufferedReader(new InputStreamReader(getAssets().open("TestWords.txt")));
             cont = 0;
-            int ran = new Random().nextInt(30) /*+ 1*/;
+            int ran = new Random().nextInt(45) /*+ 1*/;
             line = br.readLine();
             while (line != null && cont != ran) {
                 line = br.readLine();

@@ -206,7 +206,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
         }else if (testWord.length() < 40){
             timer = 40000;
         }else if (testWord.length() >= 40){
-            timer = 60000;
+            timer = 55000;
         }
         createCountDown(timer);
 
@@ -266,7 +266,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
                 }else if (testWord.length() < 40){
                     timer = 40000;
                 }else if (testWord.length() >= 40){
-                    timer = 60000;
+                    timer = 55000;
                 }
 
                 createCountDown(timer);
@@ -344,19 +344,19 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "ONDESTROY");
-
-        if (!notToDelete) {
-            if (check.delete()) {
-                Log.i(TAG, "onDestroy delete");
-            } else {
-                Log.i(TAG, "onDestroy not delete");
-            }
-        }
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        Log.i(TAG, "ONDESTROY");
+//
+//        if (!notToDelete) {
+//            if (check.delete()) {
+//                Log.i(TAG, "onDestroy delete");
+//            } else {
+//                Log.i(TAG, "onDestroy not delete");
+//            }
+//        }
+//    }
 
     @Override
     public void onBackPressed() {
@@ -398,11 +398,13 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
             }
 
         }else {
+
             if (check.delete()){
                 Log.i(TAG, "checkLastCharacter delete");
             }else{
                 Log.i(TAG, "checkLastCharacter not delete");
             }
+
         }
 
 
@@ -710,7 +712,7 @@ public class RecSensor extends AppCompatActivity implements SensorEventListener 
 
             String[] data = lastLine.split(",");
             Log.i("charchar", "lastLine: " + lastLine);
-            Log.i("charchar", "data: " + Arrays.toString(data) + " ... " + data[16]);
+//            Log.i("charchar", "data: " + Arrays.toString(data) + " ... " + data[16]);
 
             if (data[16].equals("-1")){ //se il 16esimo valore non è una lettera
 
